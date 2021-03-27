@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:5
+    command: --character-set-server=utf8 --collation-server=utf8_general_ci
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: qgenerator
+    ports:
+      - '3306:3306'
+#  switch-point-backend:
+#    image: kardanx/switch-point
+#    restart: always
+#    environment:
+#      NODE_ENV: production
+#    ports:
+#      - "3000:3000"
+#    depends_on:
+#      - db
+#    networks:
+#      - switch-point-net
+
+#networks:
+#  switch-point-net:
+#    external: true
