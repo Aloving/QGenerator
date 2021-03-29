@@ -4,10 +4,11 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
   Column,
-  JoinTable,
+  JoinTable, ManyToOne, JoinColumn,
 } from 'typeorm';
 
 import { Answer } from '../../answers';
+import { User } from '../../users/entities';
 
 @Entity()
 export class QuestionData {
@@ -41,6 +42,17 @@ export class QuestionData {
     default: 0,
   })
   dislikes: number;
+
+  @ApiProperty({
+    type: String,
+    description: 'Bound author id',
+  })
+  @Column()
+  authorId: string;
+
+  @ManyToOne(() => User, (user) => user.answers)
+  @JoinColumn({ name: 'authorId', referencedColumnName: 'id' })
+  author: User;
 
   @ApiProperty({
     description: 'The answers',

@@ -32,4 +32,17 @@ export class QuestionsService implements IQuestionService {
 
     return true;
   }
+
+  async findOne() {
+    return await this.questionRepository.findOne();
+  }
+
+  async generate(excludeIds) {
+    const question = await this.findOne();
+
+    return Promise.resolve({
+      excludeIds,
+      question,
+    });
+  }
 }

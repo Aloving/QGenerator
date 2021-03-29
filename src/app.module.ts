@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { QuestionsModule } from './questions';
-import { AuthorModule } from './author';
+import { UsersModule } from './users';
 import { AnswersModule } from './answers';
 import { DatabaseModule } from './database';
 import { EnvModule } from './env';
@@ -10,7 +10,7 @@ import { EnvModule } from './env';
 @Module({
   imports: [
     QuestionsModule,
-    AuthorModule,
+    UsersModule,
     AnswersModule,
     DatabaseModule,
     EnvModule,

@@ -1,7 +1,8 @@
-import { Length, IsNotEmpty } from 'class-validator';
+import { Length, IsNotEmpty, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-import { Answer } from '../../answers/entities';
+import { Answer } from '../../answers';
+import { User } from '../../users/entities';
 
 export class CreateQuestionDto {
   @ApiProperty({
@@ -9,10 +10,20 @@ export class CreateQuestionDto {
     maxLength: 150,
     minLength: 1,
     type: String,
+    required: true,
   })
   @IsNotEmpty()
   @Length(1, 150)
   readonly text: string;
+
+  @ApiProperty({
+    description: 'Bound user id',
+    type: String,
+    required: true,
+  })
+  @IsNotEmpty()
+  @IsString()
+  readonly authorId: User['id'];
 
   @ApiProperty({
     description: 'Start number of likes',

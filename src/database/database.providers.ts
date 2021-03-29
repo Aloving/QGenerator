@@ -3,7 +3,7 @@ import { createConnection } from 'typeorm';
 import { ProviderEnum } from '../enums';
 
 import { IEnv } from '../env';
-import { Author } from '../author';
+import { User } from '../users';
 import { Answer } from '../answers';
 import { Question } from '../questions';
 
@@ -18,7 +18,7 @@ export const databaseProviders = [
         username: env.DB_USERNAME,
         password: env.DB_PASSWORD,
         database: env.DB_DATABASE,
-        entities: [Author, Answer, Question],
+        entities: [User, Answer, Question],
         synchronize: true,
       });
     },

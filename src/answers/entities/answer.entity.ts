@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Length } from 'class-validator';
 import {
   Entity,
   Column,
@@ -6,9 +7,9 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { Author } from '../../author';
+
 import { Question } from '../../questions';
-import { Length } from 'class-validator';
+import { User } from '../../users';
 
 @Entity()
 export class Answer {
@@ -28,18 +29,36 @@ export class Answer {
   text: string;
 
   @ApiProperty({
-    type: String,
+    description: 'Count of likes',
+    type: Number,
+  })
+  @Column()
+  likes: number;
+
+  @ApiProperty({
+    description: 'Count of dislikes',
+    type: Number,
+  })
+  @Column()
+  dislikes: number;
+
+  @ApiProperty({
+    type: Number,
     description: 'Bound group id',
   })
   @Column()
-  questionId: string;
+  questionId: number;
 
   @ApiProperty({
-    type: Author,
-    description: 'Author of an answer',
+    type: String,
+    description: 'Bound author id',
   })
-  @ManyToOne(() => Author, (author) => author.answers)
-  author: Author;
+  @Column()
+  authorId: string;
+
+  @ManyToOne(() => User, (user) => user.answers)
+  @JoinColumn({ name: 'authorId', referencedColumnName: 'id' })
+  author: User;
 
   @ManyToOne(() => Question, (question) => question.answers, {
     onDelete: 'CASCADE',

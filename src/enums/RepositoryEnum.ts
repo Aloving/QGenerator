@@ -1,5 +1,5 @@
 export enum RepositoryEnum {
   AnswersRepository = 'ANSWERS_REPOSITORY',
   QuestionRepository = 'QUESTION_REPOSITORY',
-  AuthorRepository = 'AUTHOR_REPOSITORY',
+  UserRepository = 'USER_REPOSITORY',
 }
