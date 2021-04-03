@@ -77,7 +77,7 @@ export class QuestionsController {
     return this.questionsService.remove(+id);
   }
 
-  @Post('/:id/like')
+  @Put('/:id/like')
   @ApiResponse({
     status: 200,
     type: Question,
@@ -87,7 +87,7 @@ export class QuestionsController {
     return this.questionsService.like(+id);
   }
 
-  @Post('/:id/dislike')
+  @Put('/:id/dislike')
   @ApiResponse({
     status: 200,
     type: Question,

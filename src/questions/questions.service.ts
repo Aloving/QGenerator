@@ -34,7 +34,11 @@ export class QuestionsService implements IQuestionService {
   }
 
   async findOne() {
-    return await this.questionRepository.findOne();
+    return await this.questionRepository
+      .createQueryBuilder('question')
+      .leftJoinAndSelect('question.answers', 'answer')
+      .orderBy('RAND()')
+      .getOne();
   }
 
   async generate(excludeIds: number[]) {

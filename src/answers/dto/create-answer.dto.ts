@@ -20,7 +20,7 @@ export class CreateAnswerDto {
   })
   @IsNotEmpty()
   @IsString()
-  questionId: string;
+  questionId: number;
 
   @ApiProperty({
     description: 'Start count of like',

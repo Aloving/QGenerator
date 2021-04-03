@@ -1,26 +1,53 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAnswerDto } from './dto/create-answer.dto';
-import { UpdateAnswerDto } from './dto/update-answer.dto';
+import { Inject, Injectable } from '@nestjs/common';
+import { Repository } from 'typeorm';
+
+import { RepositoryEnum } from '../enums';
+import { CreateAnswerDto, UpdateAnswerDto } from './dto';
+import { IAnswerService } from './interfaces';
+import { Answer } from './entities';
 
 @Injectable()
-export class AnswersService {
-  create(createAnswerDto: CreateAnswerDto) {
-    return 'This action adds a new answer';
+export class AnswersService implements IAnswerService {
+  constructor(
+    @Inject(RepositoryEnum.AnswersRepository)
+    private answersRepository: Repository<Answer>,
+  ) {}
+
+  async create(createAnswerDto: CreateAnswerDto) {
+    const answer = this.answersRepository.create(createAnswerDto);
+
+    return this.answersRepository.save(answer);
   }
 
-  findAll() {
-    return `This action returns all answers`;
+  async update(id: string, updateAnswerDto: UpdateAnswerDto) {
+    return this.answersRepository.save({ id, ...updateAnswerDto });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} answer`;
+  async remove(id: string) {
+    await this.answersRepository.delete(id);
+
+    return true;
   }
 
-  update(id: number, updateAnswerDto: UpdateAnswerDto) {
-    return `This action updates a #${id} answer`;
+  async like(id: string) {
+    const { id: _id, ...answerToUpdate } = await this.answersRepository.findOne(
+      id,
+    );
+
+    return this.update(id, {
+      ...answerToUpdate,
+      likes: answerToUpdate.likes + 1,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} answer`;
+  async dislike(id: string) {
+    const { id: _id, ...answerToUpdate } = await this.answersRepository.findOne(
+      id,
+    );
+
+    return this.update(id, {
+      ...answerToUpdate,
+      dislikes: answerToUpdate.dislikes + 1,
+    });
   }
 }
