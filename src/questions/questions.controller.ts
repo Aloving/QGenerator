@@ -39,8 +39,8 @@ export class QuestionsController {
     type: GetRandomQuestionResponseDto,
     description: 'Path to get random question, it supports id excluding',
   })
-  generateAnswer(@Body() getRandomQuestionDto: GetRandomQuestionDto) {
-    return this.questionsService.generate(getRandomQuestionDto);
+  generateQuestion(@Body() { excludeQuestionIds }: GetRandomQuestionDto) {
+    return this.questionsService.generate(excludeQuestionIds);
   }
 
   @Get()
@@ -75,5 +75,25 @@ export class QuestionsController {
   })
   remove(@Param('id') id: string) {
     return this.questionsService.remove(+id);
+  }
+
+  @Put('/:id/like')
+  @ApiResponse({
+    status: 200,
+    type: Question,
+    description: 'Point to like a question',
+  })
+  like(@Param('id') id: number | string) {
+    return this.questionsService.like(+id);
+  }
+
+  @Put('/:id/dislike')
+  @ApiResponse({
+    status: 200,
+    type: Question,
+    description: 'Point to dislike a question',
+  })
+  dislike(@Param('id') id: number | string) {
+    return this.questionsService.dislike(+id);
   }
 }

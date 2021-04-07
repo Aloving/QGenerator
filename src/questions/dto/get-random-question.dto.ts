@@ -8,7 +8,7 @@ export class GetRandomQuestionDto {
     description: 'Ids to exclude',
   })
   @IsArray()
-  excludeQuestionIds: string[];
+  excludeQuestionIds: Question['id'][];
 }
 
 export class GetRandomQuestionResponseDto extends GetRandomQuestionDto {

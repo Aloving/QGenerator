@@ -12,4 +12,6 @@ export interface IQuestionService {
     excludeIds: Question['id'][];
     question: Question;
   }>;
+  like(id: Question['id']): Promise<Question>;
+  dislike(id: Question['id']): Promise<Question>;
 }
