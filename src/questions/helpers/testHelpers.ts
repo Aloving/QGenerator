@@ -20,6 +20,11 @@ export const compileTestQuestionModule = async () => {
           findOne: jest.fn(),
           update: jest.fn(),
           delete: jest.fn(),
+          createQueryBuilder: jest.fn().mockImplementation(() => ({
+            leftJoinAndSelect: jest.fn(),
+            orderBy: jest.fn(),
+            getOne: jest.fn().mockResolvedValue({}),
+          })),
         },
       },
       QuestionsService,

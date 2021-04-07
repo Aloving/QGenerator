@@ -1,7 +1,11 @@
 import { QuestionsController } from './questions.controller';
 import { QuestionsService } from './questions.service';
 import { compileTestQuestionModule } from './helpers/testHelpers';
-import { CreateQuestionDto, UpdateQuestionDto } from './dto';
+import {
+  CreateQuestionDto,
+  GetRandomQuestionDto,
+  UpdateQuestionDto,
+} from './dto';
 
 describe('QuestionsController', () => {
   let questionsController: QuestionsController;
@@ -20,6 +24,7 @@ describe('QuestionsController', () => {
         likes: 0,
         dislikes: 0,
         text: 'test question',
+        authorId: 'test_author_id',
         answers: [],
       };
 
@@ -32,45 +37,70 @@ describe('QuestionsController', () => {
     });
   });
 
-  describe('findAll', () => {
-    it('should call findAll method and return value', async () => {
-      jest
-        .spyOn(questionsService, 'findAll')
-        .mockResolvedValue(['ok', 'ok'] as never);
+  it('should call findAll method and return value', async () => {
+    jest
+      .spyOn(questionsService, 'findAll')
+      .mockResolvedValue(['ok', 'ok'] as never);
 
-      const response = await questionsController.findAll();
+    const response = await questionsController.findAll();
 
-      expect(questionsService.findAll).toHaveBeenCalled();
-      expect(response).toEqual(['ok', 'ok']);
-    });
+    expect(questionsService.findAll).toHaveBeenCalled();
+    expect(response).toEqual(['ok', 'ok']);
   });
 
-  describe('update', () => {
-    it('should call update method and return value', async () => {
-      const inputData: UpdateQuestionDto = {
-        likes: 0,
-        dislikes: 0,
-        text: 'test question',
-        answers: [],
-      };
+  it('should call update method and return value', async () => {
+    const inputData: UpdateQuestionDto = {
+      likes: 0,
+      dislikes: 0,
+      text: 'test question',
+      answers: [],
+    };
 
-      jest.spyOn(questionsService, 'update').mockResolvedValue('ok' as never);
+    jest.spyOn(questionsService, 'update').mockResolvedValue('ok' as never);
 
-      const response = await questionsService.update(10, inputData);
+    const response = await questionsController.update('10', inputData);
 
-      expect(questionsService.update).toHaveBeenCalledWith(10, inputData);
-      expect(response).toEqual('ok');
-    });
+    expect(questionsService.update).toHaveBeenCalledWith(10, inputData);
+    expect(response).toEqual('ok');
   });
 
-  describe('remove', () => {
-    it('should call remove method and return value', async () => {
-      jest.spyOn(questionsService, 'remove').mockResolvedValue('ok' as never);
+  it('should call remove method and return value', async () => {
+    jest.spyOn(questionsService, 'remove').mockResolvedValue('ok' as never);
 
-      const response = await questionsService.remove(10);
+    const response = await questionsController.remove('10');
 
-      expect(questionsService.remove).toHaveBeenCalledWith(10);
-      expect(response).toEqual('ok');
-    });
+    expect(questionsService.remove).toHaveBeenCalledWith(10);
+    expect(response).toEqual('ok');
+  });
+
+  it('should call like method and return value', async () => {
+    jest.spyOn(questionsService, 'like').mockResolvedValue('ok' as never);
+
+    const response = await questionsController.like(10);
+
+    expect(questionsService.like).toHaveBeenCalledWith(10);
+    expect(response).toEqual('ok');
+  });
+
+  it('should call dislike method and return value', async () => {
+    jest.spyOn(questionsService, 'dislike').mockResolvedValue('ok' as never);
+
+    const response = await questionsController.dislike(10);
+
+    expect(questionsService.dislike).toHaveBeenCalledWith(10);
+    expect(response).toEqual('ok');
+  });
+
+  it('should call dislike method and return value', async () => {
+    const inputData: GetRandomQuestionDto = {
+      excludeQuestionIds: [],
+    };
+
+    jest.spyOn(questionsService, 'generate').mockResolvedValue('ok' as never);
+
+    const response = await questionsController.generateQuestion(inputData);
+
+    expect(questionsService.generate).toHaveBeenCalledWith([]);
+    expect(response).toEqual('ok');
   });
 });

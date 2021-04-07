@@ -22,6 +22,7 @@ describe('QuestionsService', () => {
         likes: 0,
         dislikes: 0,
         text: 'test question',
+        authorId: 'test_author_id',
         answers: [],
       };
       const responseData = {
@@ -80,5 +81,63 @@ describe('QuestionsService', () => {
       expect(questionRepository.delete).toHaveBeenCalledWith(10);
       expect(response).toEqual('ok');
     });
+  });
+
+  it('should call dislike method and return value', async () => {
+    const testQuestion = {
+      id: 1,
+      likes: 0,
+      dislikes: 0,
+      text: 'test question',
+      authorId: 'test_author_id',
+      answers: [],
+      author: {
+        id: 'test_id',
+        name: 'test_name',
+        answers: [],
+        questions: [],
+      },
+    };
+
+    jest.spyOn(questionRepository, 'findOne').mockResolvedValue(testQuestion);
+    (questionRepository.save as jest.Mock).mockResolvedValue('ok');
+
+    const response = await questionService.dislike(1);
+
+    expect(questionRepository.findOne).toHaveBeenCalledWith(1);
+    expect(questionRepository.save).toHaveBeenCalledWith({
+      ...testQuestion,
+      dislikes: testQuestion.dislikes + 1,
+    });
+    expect(response).toEqual('ok');
+  });
+
+  it('should call like method and return value', async () => {
+    const testQuestion = {
+      id: 1,
+      likes: 0,
+      dislikes: 0,
+      text: 'test question',
+      authorId: 'test_author_id',
+      answers: [],
+      author: {
+        id: 'test_id',
+        name: 'test_name',
+        answers: [],
+        questions: [],
+      },
+    };
+
+    jest.spyOn(questionRepository, 'findOne').mockResolvedValue(testQuestion);
+    (questionRepository.save as jest.Mock).mockResolvedValue('ok');
+
+    const response = await questionService.like(1);
+
+    expect(questionRepository.findOne).toHaveBeenCalledWith(1);
+    expect(questionRepository.save).toHaveBeenCalledWith({
+      ...testQuestion,
+      likes: testQuestion.likes + 1,
+    });
+    expect(response).toEqual('ok');
   });
 });
