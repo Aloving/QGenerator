@@ -23,6 +23,10 @@ export class QuestionsService implements IQuestionService {
     return await this.questionRepository.find();
   }
 
+  async findOne(id: Question['id']): Promise<Question> {
+    return await this.questionRepository.findOne(id);
+  }
+
   async update(id: number, updateQuestionDto: UpdateQuestionDto) {
     return await this.questionRepository.save({ id, ...updateQuestionDto });
   }
@@ -33,7 +37,7 @@ export class QuestionsService implements IQuestionService {
     return true;
   }
 
-  async findOne() {
+  async randomizeOne() {
     return await this.questionRepository
       .createQueryBuilder('question')
       .leftJoinAndSelect('question.answers', 'answer')
@@ -41,8 +45,8 @@ export class QuestionsService implements IQuestionService {
       .getOne();
   }
 
-  async generate(excludeIds: number[]) {
-    const question = await this.findOne();
+  async randomize(excludeIds: number[]) {
+    const question = await this.randomizeOne();
 
     return Promise.resolve({
       excludeIds,
@@ -50,7 +54,7 @@ export class QuestionsService implements IQuestionService {
     });
   }
 
-  async like(id: number) {
+  async increaseLikes(id: number) {
     const {
       id: _id,
       ...questionToUpdate
@@ -62,7 +66,19 @@ export class QuestionsService implements IQuestionService {
     });
   }
 
-  async dislike(id: number) {
+  async decreaseLikes(id: number) {
+    const {
+      id: _id,
+      ...questionToUpdate
+    } = await this.questionRepository.findOne(id);
+
+    return this.update(id, {
+      ...questionToUpdate,
+      likes: questionToUpdate.likes - 1,
+    });
+  }
+
+  async increaseDislikes(id: number) {
     const {
       id: _id,
       ...questionToUpdate
@@ -71,6 +87,18 @@ export class QuestionsService implements IQuestionService {
     return this.update(id, {
       ...questionToUpdate,
       dislikes: questionToUpdate.dislikes + 1,
+    });
+  }
+
+  async decreaseDislikes(id: number) {
+    const {
+      id: _id,
+      ...questionToUpdate
+    } = await this.questionRepository.findOne(id);
+
+    return this.update(id, {
+      ...questionToUpdate,
+      dislikes: questionToUpdate.dislikes - 1,
     });
   }
 }

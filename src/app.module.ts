@@ -6,9 +6,11 @@ import { UsersModule } from './users';
 import { AnswersModule } from './answers';
 import { DatabaseModule } from './database';
 import { EnvModule } from './env';
+import { HttpInterceptor } from './HttpInterceptor';
 
 @Module({
   imports: [
+    HttpInterceptor,
     QuestionsModule,
     UsersModule,
     AnswersModule,

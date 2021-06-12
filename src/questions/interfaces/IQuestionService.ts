@@ -6,12 +6,15 @@ export interface IQuestionService {
   findAll(): Promise<Question[]>;
   update(id: Question['id'], data: UpdateQuestionDto): Promise<Question>;
   remove(id: Question['id']): Promise<boolean>;
-  generate(
+  randomize(
     excludeIds: Question['id'][],
   ): Promise<{
     excludeIds: Question['id'][];
     question: Question;
   }>;
-  like(id: Question['id']): Promise<Question>;
-  dislike(id: Question['id']): Promise<Question>;
+  findOne(id: Question['id']): Promise<Question>;
+  increaseLikes(id: Question['id']): Promise<Question>;
+  decreaseLikes(id: Question['id']): Promise<Question>;
+  increaseDislikes(id: Question['id']): Promise<Question>;
+  decreaseDislikes(id: Question['id']): Promise<Question>;
 }

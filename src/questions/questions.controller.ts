@@ -15,6 +15,7 @@ import {
   CreateQuestionDto,
   GetRandomQuestionDto,
   GetRandomQuestionResponseDto,
+  GetQuestionDto,
 } from './dto';
 import { Question } from './entities';
 
@@ -33,14 +34,24 @@ export class QuestionsController {
     return this.questionsService.create(createQuestionDto);
   }
 
-  @Post('/generate')
+  @Post('/randomize')
   @ApiResponse({
     status: 200,
     type: GetRandomQuestionResponseDto,
     description: 'Path to get random question, it supports id excluding',
   })
-  generateQuestion(@Body() { excludeQuestionIds }: GetRandomQuestionDto) {
-    return this.questionsService.generate(excludeQuestionIds);
+  randomizeQuestion(@Body() { excludeIds }: GetRandomQuestionDto) {
+    return this.questionsService.randomize(excludeIds);
+  }
+
+  @Get(':id')
+  @ApiResponse({
+    status: 200,
+    type: Question,
+    description: 'Endpoint to get certain question by id',
+  })
+  getQuestion(@Param('id') id: string) {
+    return this.questionsService.findOne(+id);
   }
 
   @Get()
@@ -77,23 +88,43 @@ export class QuestionsController {
     return this.questionsService.remove(+id);
   }
 
-  @Put('/:id/like')
+  @Put('/:id/increaseLikes')
   @ApiResponse({
     status: 200,
     type: Question,
-    description: 'Point to like a question',
+    description: 'Point to increase likes of a question',
   })
-  like(@Param('id') id: number | string) {
-    return this.questionsService.like(+id);
+  increaseLikes(@Param('id') id: number | string) {
+    return this.questionsService.increaseLikes(+id);
   }
 
-  @Put('/:id/dislike')
+  @Put('/:id/decreaseLikes')
   @ApiResponse({
     status: 200,
     type: Question,
-    description: 'Point to dislike a question',
+    description: 'Point to decrease likes of a question',
   })
-  dislike(@Param('id') id: number | string) {
-    return this.questionsService.dislike(+id);
+  decreaseLikes(@Param('id') id: number | string) {
+    return this.questionsService.decreaseLikes(+id);
+  }
+
+  @Put('/:id/increaseDislikes')
+  @ApiResponse({
+    status: 200,
+    type: Question,
+    description: 'Point to increase likes of a question',
+  })
+  increaseDislikes(@Param('id') id: number | string) {
+    return this.questionsService.increaseDislikes(+id);
+  }
+
+  @Put('/:id/decreaseDislikes')
+  @ApiResponse({
+    status: 200,
+    type: Question,
+    description: 'Point to decrease likes of a question',
+  })
+  decreaseDislikes(@Param('id') id: number | string) {
+    return this.questionsService.decreaseDislikes(+id);
   }
 }
