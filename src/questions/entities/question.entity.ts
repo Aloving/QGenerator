@@ -4,7 +4,9 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
   Column,
-  JoinTable, ManyToOne, JoinColumn,
+  JoinTable,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 
 import { Answer } from '../../answers';

@@ -7,6 +7,7 @@ import { AnswersModule } from './answers';
 import { DatabaseModule } from './database';
 import { EnvModule } from './env';
 import { HttpInterceptor } from './HttpInterceptor';
+import { ProposalsModule } from './proposals/proposals.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { HttpInterceptor } from './HttpInterceptor';
     AnswersModule,
     DatabaseModule,
     EnvModule,
+    ProposalsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

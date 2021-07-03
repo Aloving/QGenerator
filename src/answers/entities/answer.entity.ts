@@ -8,18 +8,11 @@ import {
   JoinColumn,
 } from 'typeorm';
 
-import { Question } from '../../questions';
 import { User } from '../../users';
+import { Question } from '../../questions/entities';
 
 @Entity()
-export class Answer {
-  @ApiProperty({
-    type: String,
-    description: 'Unique ID',
-  })
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
+export class AnswerData {
   @ApiProperty({
     description: 'Text of an answer',
     minLength: 1,
@@ -66,4 +59,14 @@ export class Answer {
   })
   @JoinColumn({ name: 'questionId', referencedColumnName: 'id' })
   question: Question;
+}
+
+@Entity()
+export class Answer extends AnswerData {
+  @ApiProperty({
+    type: String,
+    description: 'Unique ID',
+  })
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 }
