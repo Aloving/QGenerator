@@ -1,7 +1,7 @@
 import { Connection } from 'typeorm';
 
 import { RepositoryEnum, ProviderEnum } from '../enums';
-import { Question } from './entities';
+import { Question, QuestionProposals } from './entities';
 
 export const questionsProviders = [
   {

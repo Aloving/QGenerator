@@ -17,7 +17,7 @@ import {
   GetRandomQuestionResponseDto,
   GetQuestionDto,
 } from './dto';
-import { Question } from './entities';
+import { Question, QuestionProposal } from './entities';
 
 @ApiTags('questions')
 @Controller('questions')
@@ -126,5 +126,15 @@ export class QuestionsController {
   })
   decreaseDislikes(@Param('id') id: number | string) {
     return this.questionsService.decreaseDislikes(+id);
+  }
+
+  @Put('/proposal')
+  @ApiResponse({
+    status: 200,
+    type: QuestionProposal,
+    description: 'point to propose a question',
+  })
+  proposeQuestion(@Body() createQuestionDto: CreateQuestionDto) {
+
   }
 }
