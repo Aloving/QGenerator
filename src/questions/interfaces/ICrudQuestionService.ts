@@ -7,4 +7,5 @@ export interface ICrudQuestionService {
   update(id: Question['id'], data: UpdateQuestionDto): Promise<Question>;
   remove(id: Question['id']): Promise<boolean>;
   findOne(id: Question['id']): Promise<Question>;
+  randomizeOne(): Promise<Question>;
 }

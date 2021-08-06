@@ -2,47 +2,19 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 
 import { RepositoryEnum } from '../enums';
-import { UpdateQuestionDto, CreateQuestionDto } from './dto';
+import { QuestionsCrudService } from './questionsCrud.service';
 import { IQuestionService } from './interfaces';
 import { Question } from './entities';
 
 @Injectable()
-export class QuestionsService implements IQuestionService {
+export class QuestionsService
+  extends QuestionsCrudService
+  implements IQuestionService {
   constructor(
     @Inject(RepositoryEnum.QuestionRepository)
-    private questionRepository: Repository<Question>,
-  ) {}
-
-  async create(createQuestionDto: CreateQuestionDto) {
-    const question = this.questionRepository.create(createQuestionDto);
-
-    return this.questionRepository.save(question);
-  }
-
-  async findAll() {
-    return await this.questionRepository.find();
-  }
-
-  async findOne(id: Question['id']): Promise<Question> {
-    return await this.questionRepository.findOne(id);
-  }
-
-  async update(id: number, updateQuestionDto: UpdateQuestionDto) {
-    return await this.questionRepository.save({ id, ...updateQuestionDto });
-  }
-
-  async remove(id: number) {
-    await this.questionRepository.delete(id);
-
-    return true;
-  }
-
-  async randomizeOne() {
-    return await this.questionRepository
-      .createQueryBuilder('question')
-      .leftJoinAndSelect('question.answers', 'answer')
-      .orderBy('RAND()')
-      .getOne();
+    public readonly questionRepositoryMy: Repository<Question>,
+  ) {
+    super(questionRepositoryMy);
   }
 
   async randomize(excludeIds: number[]) {
@@ -55,10 +27,7 @@ export class QuestionsService implements IQuestionService {
   }
 
   async increaseLikes(id: number) {
-    const {
-      id: _id,
-      ...questionToUpdate
-    } = await this.questionRepository.findOne(id);
+    const { id: _id, ...questionToUpdate } = await this.findOne(id);
 
     return this.update(id, {
       ...questionToUpdate,
@@ -67,10 +36,7 @@ export class QuestionsService implements IQuestionService {
   }
 
   async decreaseLikes(id: number) {
-    const {
-      id: _id,
-      ...questionToUpdate
-    } = await this.questionRepository.findOne(id);
+    const { id: _id, ...questionToUpdate } = await this.findOne(id);
 
     return this.update(id, {
       ...questionToUpdate,
@@ -79,10 +45,7 @@ export class QuestionsService implements IQuestionService {
   }
 
   async increaseDislikes(id: number) {
-    const {
-      id: _id,
-      ...questionToUpdate
-    } = await this.questionRepository.findOne(id);
+    const { id: _id, ...questionToUpdate } = await this.findOne(id);
 
     return this.update(id, {
       ...questionToUpdate,
@@ -91,10 +54,7 @@ export class QuestionsService implements IQuestionService {
   }
 
   async decreaseDislikes(id: number) {
-    const {
-      id: _id,
-      ...questionToUpdate
-    } = await this.questionRepository.findOne(id);
+    const { id: _id, ...questionToUpdate } = await this.findOne(id);
 
     return this.update(id, {
       ...questionToUpdate,
