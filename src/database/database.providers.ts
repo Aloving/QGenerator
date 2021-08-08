@@ -5,8 +5,7 @@ import { ProviderEnum } from '../enums';
 import { IEnv } from '../env';
 import { User } from '../users';
 import { Answer } from '../answers';
-import { Question } from '../questions';
-import { Proposal, QuestionProposal } from '../proposals/entities';
+import { Question, QuestionProposal } from '../questions';
 
 export const databaseProviders = [
   {
@@ -19,7 +18,7 @@ export const databaseProviders = [
         username: env.DB_USERNAME,
         password: env.DB_PASSWORD,
         database: env.DB_DATABASE,
-        entities: [User, Answer, Question, Proposal, QuestionProposal],
+        entities: [User, Answer, Question, QuestionProposal],
         synchronize: true,
       });
     },

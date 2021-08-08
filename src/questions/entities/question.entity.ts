@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -7,15 +7,14 @@ import {
   JoinTable,
   ManyToOne,
   JoinColumn,
-} from 'typeorm';
+} from "typeorm";
 
-import { Answer } from '../../answers';
-import { User } from '../../users/entities';
+import { Answer } from "../../answers";
+import { User } from "../../users/entities";
 
-@Entity()
-export class QuestionData {
+export class QuestionBaseData {
   @ApiProperty({
-    description: 'Text of a question',
+    description: "Text of a question",
     maxLength: 150,
     minLength: 1,
     type: String,
@@ -26,7 +25,21 @@ export class QuestionData {
   text: string;
 
   @ApiProperty({
-    description: 'Likes count',
+    type: String,
+    description: "Bound author id",
+  })
+  @Column()
+  authorId: string;
+
+  @ManyToOne(() => User, (user) => user.answers)
+  @JoinColumn({ name: "authorId", referencedColumnName: "id" })
+  author: User;
+}
+
+@Entity()
+export class QuestionData extends QuestionBaseData {
+  @ApiProperty({
+    description: "Likes count",
     default: 0,
     type: Number,
   })
@@ -36,7 +49,7 @@ export class QuestionData {
   likes: number;
 
   @ApiProperty({
-    description: 'Dislikes count',
+    description: "Dislikes count",
     default: 0,
     type: Number,
   })
@@ -46,18 +59,7 @@ export class QuestionData {
   dislikes: number;
 
   @ApiProperty({
-    type: String,
-    description: 'Bound author id',
-  })
-  @Column()
-  authorId: string;
-
-  @ManyToOne(() => User, (user) => user.answers)
-  @JoinColumn({ name: 'authorId', referencedColumnName: 'id' })
-  author: User;
-
-  @ApiProperty({
-    description: 'The answers',
+    description: "The answers",
     type: Answer,
     isArray: true,
   })
@@ -72,7 +74,7 @@ export class QuestionData {
 @Entity()
 export class Question extends QuestionData {
   @ApiProperty({
-    description: 'Ordered ID',
+    description: "Ordered ID",
   })
   @PrimaryGeneratedColumn()
   id: number;

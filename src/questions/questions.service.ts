@@ -1,10 +1,12 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Inject, Injectable } from "@nestjs/common";
+import { Repository } from "typeorm";
 
-import { RepositoryEnum } from '../enums';
-import { QuestionsCrudService } from './questionsCrud.service';
-import { IQuestionService } from './interfaces';
-import { Question } from './entities';
+import { RepositoryEnum } from "../enums";
+import { QuestionsCrudService } from "./questionsCrud.service";
+import { IQuestionService } from "./interfaces";
+import { Question } from "./entities";
+import { CreateQuestionBaseDataDto } from "./dto";
+import { QuestionProposalsService } from "./questions-proposals.service";
 
 @Injectable()
 export class QuestionsService
@@ -12,9 +14,20 @@ export class QuestionsService
   implements IQuestionService {
   constructor(
     @Inject(RepositoryEnum.QuestionRepository)
-    public readonly questionRepositoryMy: Repository<Question>,
+    public readonly questionRepository: Repository<Question>,
+    private readonly proposalsService: QuestionProposalsService
   ) {
-    super(questionRepositoryMy);
+    super(questionRepository);
+  }
+
+  async offerQuestion(data: CreateQuestionBaseDataDto) {
+    return this.proposalsService.offerQuestion({
+      ...data,
+    });
+  }
+
+  async findAllQuestionProposals() {
+    return this.proposalsService.findAllQuestionProposals();
   }
 
   async randomize(excludeIds: number[]) {

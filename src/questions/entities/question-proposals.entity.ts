@@ -1,13 +1,13 @@
-import { Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn } from "typeorm";
+import { ApiProperty } from "@nestjs/swagger";
 
-import { QuestionData } from './question.entity';
-import { ApiProperty } from '@nestjs/swagger';
+import { QuestionBaseData } from "./question.entity";
 
 @Entity()
-export class QuestionProposal extends QuestionData {
+export class QuestionProposal extends QuestionBaseData {
   @ApiProperty({
-    description: 'Unique id for a proposal',
+    description: "Unique id for a proposal",
   })
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn("uuid")
   id: string;
 }

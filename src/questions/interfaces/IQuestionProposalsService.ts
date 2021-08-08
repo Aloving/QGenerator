@@ -1,10 +1,7 @@
-import { IAnswer } from '../../answers/interfaces';
-import { IQuestionProposal } from './IQuestionProposal';
-import { IAnswerProposal } from './IAnswerProposal';
-import { CreateQuestionDto } from '../../questions/dto';
-import { QuestionProposal } from '../entities';
+import { QuestionProposal } from "../entities/question-proposals.entity";
+import { CreateQuestionDto } from "../dto";
 
-export interface IProposalsService {
+export interface IQuestionProposalsService {
   offerQuestion(question: CreateQuestionDto): Promise<QuestionProposal>;
   // acceptQuestionOffer(
   //   questionProposalId: QuestionProposal['id'],
