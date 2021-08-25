@@ -1,14 +1,15 @@
-import { QuestionProposal } from "../entities/question-proposals.entity";
 import { CreateQuestionDto } from "../dto";
+import { Question, QuestionProposal } from "../entities";
 
 export interface IQuestionProposalsService {
   offerQuestion(question: CreateQuestionDto): Promise<QuestionProposal>;
-  // acceptQuestionOffer(
-  //   questionProposalId: QuestionProposal['id'],
-  // ): Promise<boolean>;
+  acceptQuestionProposal(
+    questionProposalId: QuestionProposal["id"]
+  ): Promise<boolean>;
   findAllQuestionProposals(): Promise<QuestionProposal[]>;
-  //
-  // offerAnswer(question: Omit<IAnswer, 'id'>): Promise<IAnswerProposal>;
+  findQuestionProposal(
+    proposalId: QuestionProposal["id"]
+  ): Promise<QuestionProposal>;
   // acceptAnswerOffer(answerProposalId: IAnswerProposal['id']): Promise<boolean>;
   // findAllAnswersProposals(): Promise<IAnswerProposal[]>;
 }

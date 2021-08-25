@@ -1,10 +1,8 @@
-import { Question, QuestionData } from "../entities";
+import { Question, QuestionProposal } from "../entities";
 import { ICrudQuestionService } from "./ICrudQuestionService";
-import { IQuestionProposalsService } from "./IQuestionProposalsService";
+import { CreateQuestionDto } from "../dto";
 
-export interface IQuestionService
-  extends ICrudQuestionService,
-    IQuestionProposalsService {
+export interface IQuestionService extends ICrudQuestionService {
   randomize(
     excludeIds: Question["id"][]
   ): Promise<{
@@ -15,4 +13,13 @@ export interface IQuestionService
   decreaseLikes(id: Question["id"]): Promise<Question>;
   increaseDislikes(id: Question["id"]): Promise<Question>;
   decreaseDislikes(id: Question["id"]): Promise<Question>;
+
+  offerQuestion(question: CreateQuestionDto): Promise<QuestionProposal>;
+  acceptQuestionProposal(
+    questionProposalId: QuestionProposal["id"]
+  ): Promise<Question>;
+  findAllQuestionProposals(): Promise<QuestionProposal[]>;
+  findQuestionProposal(
+    proposalId: QuestionProposal["id"]
+  ): Promise<QuestionProposal>;
 }

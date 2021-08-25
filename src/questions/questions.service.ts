@@ -4,8 +4,8 @@ import { Repository } from "typeorm";
 import { RepositoryEnum } from "../enums";
 import { QuestionsCrudService } from "./questionsCrud.service";
 import { IQuestionService } from "./interfaces";
-import { Question } from "./entities";
-import { CreateQuestionBaseDataDto } from "./dto";
+import { Question, QuestionProposal } from "./entities";
+import { CreateQuestionBaseDataDto, AcceptQuestionProposal } from "./dto";
 import { QuestionProposalsService } from "./questions-proposals.service";
 
 @Injectable()
@@ -18,6 +18,21 @@ export class QuestionsService
     private readonly proposalsService: QuestionProposalsService
   ) {
     super(questionRepository);
+  }
+
+  async acceptQuestionProposal(proposalId: QuestionProposal["id"]) {
+    const {
+      id: _id,
+      ...proposal
+    } = await this.proposalsService.findQuestionProposal(proposalId);
+
+    this.proposalsService.acceptQuestionProposal(proposalId);
+
+    return this.create({ ...proposal, likes: 0, dislikes: 0, answers: [] });
+  }
+
+  async findQuestionProposal(proposalId: QuestionProposal["id"]) {
+    return this.proposalsService.findQuestionProposal(proposalId);
   }
 
   async offerQuestion(data: CreateQuestionBaseDataDto) {

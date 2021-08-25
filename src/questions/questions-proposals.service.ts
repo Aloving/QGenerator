@@ -14,6 +14,12 @@ export class QuestionProposalsService implements IQuestionProposalsService {
     private questionProposalRepository: Repository<QuestionProposal>
   ) {}
 
+  async acceptQuestionProposal(id: QuestionProposal["id"]) {
+    this.questionProposalRepository.delete(id);
+
+    return true;
+  }
+
   async offerQuestion(createQuestionBaseDataDto: CreateQuestionBaseDataDto) {
     const questionProposal = this.questionProposalRepository.create(
       createQuestionBaseDataDto
@@ -24,5 +30,9 @@ export class QuestionProposalsService implements IQuestionProposalsService {
 
   async findAllQuestionProposals() {
     return this.questionProposalRepository.find();
+  }
+
+  async findQuestionProposal(id: QuestionProposal["id"]) {
+    return this.questionProposalRepository.findOne(id);
   }
 }

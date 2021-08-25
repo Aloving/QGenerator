@@ -11,6 +11,7 @@ import { ApiResponse, ApiTags, ApiParam } from "@nestjs/swagger";
 
 import { QuestionsService } from "./questions.service";
 import {
+  AcceptQuestionProposal,
   UpdateQuestionDto,
   CreateQuestionDto,
   GetRandomQuestionDto,
@@ -35,6 +36,19 @@ export class QuestionsController {
   ) {
     console.log(createQuestionBaseDataDto);
     return this.questionsService.offerQuestion(createQuestionBaseDataDto);
+  }
+
+  @Put("/proposal/:id/accept")
+  @ApiParam({
+    name: "id",
+  })
+  @ApiResponse({
+    status: 200,
+    type: Question,
+    description: "point to propose a question",
+  })
+  acceptProposal(@Param("id") id: QuestionProposal["id"]) {
+    return this.questionsService.acceptQuestionProposal(id);
   }
 
   @Get("/proposals")
