@@ -1,5 +1,14 @@
-import { Body, Controller, Post, Get, UseGuards, Req } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import {
+  Body,
+  Controller,
+  Post,
+  Get,
+  UseGuards,
+  Req,
+  UseInterceptors,
+  ClassSerializerInterceptor,
+} from "@nestjs/common";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { AuthGuard } from "@nestjs/passport";
 import { ExtractJwt } from "passport-jwt";
 import { Request } from "express";
@@ -24,7 +33,9 @@ export class AuthController {
   }
 
   @Get("/userByToken")
+  @ApiBearerAuth("access-token")
   @UseGuards(AuthGuard())
+  @UseInterceptors(ClassSerializerInterceptor)
   async getUser(@Req() request: Request) {
     const token = ExtractJwt.fromAuthHeaderAsBearerToken()(request);
 

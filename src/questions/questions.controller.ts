@@ -33,7 +33,6 @@ export class QuestionsController {
   proposeQuestion(
     @Body() createQuestionBaseDataDto: CreateQuestionBaseDataDto
   ) {
-    console.log(createQuestionBaseDataDto);
     return this.questionsService.offerQuestion(createQuestionBaseDataDto);
   }
 
