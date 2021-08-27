@@ -11,7 +11,6 @@ import { ApiResponse, ApiTags, ApiParam } from "@nestjs/swagger";
 
 import { QuestionsService } from "./questions.service";
 import {
-  AcceptQuestionProposal,
   UpdateQuestionDto,
   CreateQuestionDto,
   GetRandomQuestionDto,

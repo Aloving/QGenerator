@@ -7,6 +7,8 @@ import { AnswersModule } from "./answers";
 import { DatabaseModule } from "./database";
 import { EnvModule } from "./env";
 import { HttpInterceptor } from "./HttpInterceptor";
+import { AuthModule } from "./auth";
+import { CryptModule } from "./crypt";
 
 @Module({
   imports: [
@@ -16,6 +18,8 @@ import { HttpInterceptor } from "./HttpInterceptor";
     AnswersModule,
     DatabaseModule,
     EnvModule,
+    AuthModule,
+    CryptModule,
   ],
   controllers: [AppController],
   providers: [AppService],

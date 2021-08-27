@@ -1,36 +1,64 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Inject, Injectable } from "@nestjs/common";
+import { Repository } from "typeorm";
 
-import { RepositoryEnum } from '../enums';
-import { CreateUserDto, UpdateUserDto } from './dto';
-import { User } from './entities';
+import { RepositoryEnum } from "../enums";
+import {
+  AddRefreshTokenDto,
+  CreateUserDto,
+  FindUserByIdDto,
+  FindUserByLoginDto,
+  FindUserByRefreshTokenDto,
+} from "./dto";
+import { User } from "./entities";
+import { IUserService } from "./interfaces";
+import { CryptService } from "../crypt";
 
 @Injectable()
-export class UsersService {
+export class UsersService implements IUserService {
   constructor(
+    private cryptService: CryptService,
     @Inject(RepositoryEnum.UserRepository)
-    private userRepository: Repository<User>,
+    private userRepository: Repository<User>
   ) {}
 
-  create(createAuthorDto: CreateUserDto) {
-    const user = this.userRepository.create(createAuthorDto);
+  async create({ password, ...createUserDto }: CreateUserDto) {
+    const cryptedPassword = await this.cryptService.hashPassword(password);
+    const user = this.userRepository.create({
+      password: cryptedPassword,
+      ...createUserDto,
+    });
 
     return this.userRepository.save(user);
   }
 
-  findAll() {
-    return `This action returns all author`;
+  findAllUsers(): Promise<User[]> {
+    return this.userRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} author`;
+  findUserById({ id }: FindUserByIdDto): Promise<User> {
+    return this.userRepository.findOne({ id });
   }
 
-  update(id: number, updateAuthorDto: UpdateUserDto) {
-    return `This action updates a #${id} author`;
+  findUserByLogin({ login }: FindUserByLoginDto): Promise<User> {
+    return this.userRepository.findOne({ login });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} author`;
+  findUserByRefreshToken({
+    refreshToken,
+  }: FindUserByRefreshTokenDto): Promise<User> {
+    return this.userRepository.findOne({
+      refreshToken,
+    });
+  }
+
+  async addRefreshToken({
+    refreshToken,
+    userId,
+  }: AddRefreshTokenDto): Promise<void> {
+    await this.userRepository.update(userId, { refreshToken });
+  }
+
+  async deleteRefreshToken(userId: User["id"]): Promise<void> {
+    await this.userRepository.update(userId, { refreshToken: null });
   }
 }

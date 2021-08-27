@@ -2,7 +2,7 @@ import { Length, IsNotEmpty, IsString } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 
 import { Answer } from "../../answers";
-import { User } from "../../users/entities";
+import { User } from "../../users";
 
 export class CreateQuestionBaseDataDto {
   @ApiProperty({
