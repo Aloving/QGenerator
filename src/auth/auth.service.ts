@@ -13,26 +13,14 @@ import { JwtPayload } from "./interfaces/jwt-payload.interface";
 import { AuthService as IAuthService } from "./interfaces/auth-service.interface";
 import { LoginDto } from "./dto/login.dto";
 import { TokenRefreshDto } from "./dto/token-refresh.dto";
-import { TokensPair } from "./interfaces/tokens-pair.interface";
+import { TokensPair } from "../interfaces";
 
 @Injectable()
 export class AuthService implements IAuthService {
   constructor(
-    private readonly jwtService: JwtService,
     private readonly userService: UsersService,
     private readonly cryptService: CryptService
   ) {}
-
-  decodeToken<T>(token: string) {
-    return this.jwtService.decode(token) as T;
-  }
-
-  createToken(id: User["id"]) {
-    const accessToken = this.jwtService.sign({ id });
-    const refreshToken = this.cryptService.generateRandomId();
-
-    return { accessToken, refreshToken };
-  }
 
   async login({ login, password }: LoginDto) {
     const user = await this.userService.findUserByLogin({ login });
@@ -44,7 +32,7 @@ export class AuthService implements IAuthService {
       throw new UnauthorizedException();
     }
 
-    const tokens = this.createToken(user.id);
+    const tokens = this.cryptService.createToken(user.id);
 
     await this.userService.addRefreshToken({
       userId: user.id,
@@ -67,7 +55,7 @@ export class AuthService implements IAuthService {
       throw new GoneException();
     }
 
-    const newTokenPair = this.createToken(userByToken.id);
+    const newTokenPair = this.cryptService.createToken(userByToken.id);
 
     await this.userService.addRefreshToken({
       userId: userByToken.id,
@@ -78,7 +66,7 @@ export class AuthService implements IAuthService {
   }
 
   async getUserByToken(token: string): Promise<User | undefined> {
-    const jwtPayload = this.decodeToken<JwtPayload>(token);
+    const jwtPayload = this.cryptService.decodeToken<JwtPayload>(token);
 
     return await this.userService.findUserById({ id: jwtPayload.id });
   }

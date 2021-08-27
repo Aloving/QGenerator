@@ -23,6 +23,7 @@ export class UsersController {
     type: User,
     description: "A point to create a new user",
   })
+  @UseInterceptors(ClassSerializerInterceptor)
   async create(@Body() createUser: CreateUserDto) {
     return this.questionsService.create(createUser);
   }

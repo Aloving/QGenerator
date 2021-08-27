@@ -10,6 +10,7 @@ import { IsEmail, IsNotEmpty, Length } from "class-validator";
 
 import { Answer } from "../../answers";
 import { Question } from "../../questions";
+import { Role } from "../enums";
 
 @Entity()
 export class User {
@@ -47,6 +48,14 @@ export class User {
   @Exclude()
   @Column({ select: true })
   public password: string;
+
+  @Column({
+    type: "enum",
+    enum: Role,
+    default: Role.User,
+  })
+  @IsNotEmpty()
+  public role: Role;
 
   @Column()
   @IsEmail({}, { message: "Incorrect email" })
