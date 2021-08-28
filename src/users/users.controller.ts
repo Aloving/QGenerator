@@ -4,13 +4,18 @@ import {
   Controller,
   Get,
   Post,
+  UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
-import { ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
 
 import { CreateUserDto } from "./dto";
 import { UsersService } from "./users.service";
 import { User } from "./entities";
+import { AuthGuard } from "@nestjs/passport";
+import { Roles } from "./decorators";
+import { Role } from "./enums";
+import { RolesGuard } from "./guards";
 
 @ApiTags("users")
 @Controller("users")
@@ -36,6 +41,10 @@ export class UsersController {
     description: "A point to get all accounts",
   })
   @UseInterceptors(ClassSerializerInterceptor)
+  @ApiBearerAuth("access-token")
+  @UseGuards(AuthGuard("jwt"))
+  @Roles(Role.Admin, Role.Moderator)
+  @UseGuards(RolesGuard)
   async findAll() {
     return this.questionsService.findAllUsers();
   }

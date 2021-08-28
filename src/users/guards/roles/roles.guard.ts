@@ -1,4 +1,9 @@
-import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from "@nestjs/common";
 import { Observable } from "rxjs";
 import { Reflector } from "@nestjs/core";
 import { ExtractJwt } from "passport-jwt";
@@ -27,9 +32,14 @@ export class RolesGuard implements CanActivate {
     }
     const request = context.switchToHttp().getRequest();
     const token = ExtractJwt.fromAuthHeaderAsBearerToken()(request);
-    const { id } = this.cryptService.decodeToken<JwtPayload>(token);
-    const user = await this.usersService.findUserById({ id });
 
-    return requiredRoles.some((role) => user.role === role);
+    if (token) {
+      const { id } = this.cryptService.decodeToken<JwtPayload>(token);
+      const user = await this.usersService.findUserById({ id });
+
+      return requiredRoles.some((role) => user.role === role);
+    }
+
+    throw new UnauthorizedException();
   }
 }

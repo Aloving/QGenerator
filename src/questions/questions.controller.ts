@@ -1,23 +1,30 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Put,
-  Param,
+  ClassSerializerInterceptor,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+  UseInterceptors,
 } from "@nestjs/common";
-import { ApiResponse, ApiTags, ApiParam } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 
 import { QuestionsService } from "./questions.service";
 import {
-  UpdateQuestionDto,
+  CreateQuestionBaseDataDto,
   CreateQuestionDto,
   GetRandomQuestionDto,
   GetRandomQuestionResponseDto,
-  CreateQuestionBaseDataDto,
+  UpdateQuestionDto,
 } from "./dto";
 import { Question, QuestionProposal } from "./entities";
+import { AuthGuard } from "@nestjs/passport";
+import { Roles } from "../users/decorators";
+import { Role } from "../users/enums";
+import { RolesGuard } from "../users/guards";
 
 @ApiTags("questions")
 @Controller("questions")
@@ -30,6 +37,7 @@ export class QuestionsController {
     type: QuestionProposal,
     description: "point to propose a question",
   })
+  @UseInterceptors(ClassSerializerInterceptor)
   proposeQuestion(
     @Body() createQuestionBaseDataDto: CreateQuestionBaseDataDto
   ) {
@@ -45,6 +53,10 @@ export class QuestionsController {
     type: Question,
     description: "point to propose a question",
   })
+  @ApiBearerAuth("access-token")
+  @UseGuards(AuthGuard("jwt"))
+  @Roles(Role.Admin, Role.Moderator)
+  @UseGuards(RolesGuard)
   acceptProposal(@Param("id") id: QuestionProposal["id"]) {
     return this.questionsService.acceptQuestionProposal(id);
   }
@@ -56,6 +68,10 @@ export class QuestionsController {
     isArray: true,
     description: "Find all questions proposals",
   })
+  @ApiBearerAuth("access-token")
+  @UseGuards(AuthGuard("jwt"))
+  @Roles(Role.Admin, Role.Moderator)
+  @UseGuards(RolesGuard)
   getAllProposes() {
     return this.questionsService.findAllQuestionProposals();
   }
@@ -66,6 +82,10 @@ export class QuestionsController {
     type: Question,
     description: "A point to create question",
   })
+  @ApiBearerAuth("access-token")
+  @UseGuards(AuthGuard("jwt"))
+  @Roles(Role.Admin, Role.Moderator)
+  @UseGuards(RolesGuard)
   create(@Body() createQuestionDto: CreateQuestionDto) {
     return this.questionsService.create(createQuestionDto);
   }
@@ -86,6 +106,10 @@ export class QuestionsController {
     type: Question,
     description: "Endpoint to get certain question by id",
   })
+  @ApiBearerAuth("access-token")
+  @UseGuards(AuthGuard("jwt"))
+  @Roles(Role.Admin, Role.Moderator)
+  @UseGuards(RolesGuard)
   getQuestion(@Param("id") id: string) {
     return this.questionsService.findOne(+id);
   }
@@ -97,6 +121,10 @@ export class QuestionsController {
     isArray: true,
     description: "Point to get all questions",
   })
+  @ApiBearerAuth("access-token")
+  @UseGuards(AuthGuard("jwt"))
+  @Roles(Role.Admin, Role.Moderator)
+  @UseGuards(RolesGuard)
   findAll() {
     return this.questionsService.findAll();
   }
@@ -107,6 +135,9 @@ export class QuestionsController {
     type: Question,
     description: "Point to update an existing question",
   })
+  @UseGuards(AuthGuard("jwt"))
+  @Roles(Role.Admin, Role.Moderator)
+  @UseGuards(RolesGuard)
   update(
     @Param("id") id: string,
     @Body() updateQuestionDto: UpdateQuestionDto
@@ -121,6 +152,10 @@ export class QuestionsController {
     type: Boolean,
     description: "A point to delete question out of the app",
   })
+  @ApiBearerAuth("access-token")
+  @UseGuards(AuthGuard("jwt"))
+  @Roles(Role.Admin, Role.Moderator)
+  @UseGuards(RolesGuard)
   remove(@Param("id") id: string) {
     return this.questionsService.remove(+id);
   }

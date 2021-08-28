@@ -30,7 +30,7 @@ import { RolesGuard } from "./users/guards";
     {
       provide: APP_GUARD,
       useClass: RolesGuard,
-    },
+    }
   ],
 })
 export class AppModule {}

@@ -17,7 +17,7 @@ export class User {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Column()
+  @Column({ unique: true })
   login: string;
 
   @OneToMany(() => Answer, (answer) => answer.author, {

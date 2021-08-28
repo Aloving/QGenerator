@@ -1,7 +1,13 @@
-import { Inject, Injectable } from "@nestjs/common";
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  OnApplicationBootstrap,
+} from "@nestjs/common";
 import { Repository } from "typeorm";
 
-import { RepositoryEnum } from "../enums";
+import { ProviderEnum, RepositoryEnum } from "../enums";
 import {
   AddRefreshTokenDto,
   CreateUserDto,
@@ -13,35 +19,74 @@ import { User } from "./entities";
 import { IUserService } from "./interfaces";
 import { CryptService } from "../crypt";
 import { Role } from "./enums";
+import { IEnv } from "../env";
 
 @Injectable()
-export class UsersService implements IUserService {
+export class UsersService implements IUserService, OnApplicationBootstrap {
   private DEFAULT_USER_ROLE = Role.User;
 
   constructor(
     private cryptService: CryptService,
     @Inject(RepositoryEnum.UserRepository)
-    private userRepository: Repository<User>
+    private userRepository: Repository<User>,
+    @Inject(ProviderEnum.Env) private env: IEnv
   ) {}
+
+  async onApplicationBootstrap() {
+    // create default user
+    const user = await this.userRepository.find({
+      login: this.env.DEFAULT_USER_LOGIN,
+    });
+
+    if (!user) {
+      return await this.create({
+        login: this.env.DEFAULT_USER_LOGIN,
+        email: this.env.DEFAULT_USER_EMAIL,
+        password: this.env.DEFAULT_USER_PASSWORD,
+      });
+    }
+  }
 
   async createUser({
     password,
     role,
     ...createUserDto
-  }: CreateUserDto & { role: Role }): Promise<User> {
+  }: CreateUserDto & { role: Role }): Promise<any> {
     const cryptedPassword = await this.cryptService.hashPassword(password);
 
-    return this.userRepository.create({
-      password: cryptedPassword,
-      role,
-      ...createUserDto,
-    });
+    try {
+      const user = await this.userRepository.findOne({
+        login: createUserDto.login,
+      });
+
+      if (user) {
+        throw new HttpException(
+          "User is already exists",
+          HttpStatus.UNPROCESSABLE_ENTITY
+        );
+      }
+
+      return this.userRepository.create({
+        password: cryptedPassword,
+        role,
+        ...createUserDto,
+      });
+    } catch (e) {
+      throw new HttpException(
+        "User is already exists",
+        HttpStatus.UNPROCESSABLE_ENTITY
+      );
+    }
   }
 
   async create(createUserDto: CreateUserDto) {
     const users = await this.findAllUsers();
 
-    if (users && !users.length) {
+    if (
+      users &&
+      users.length < 1 &&
+      createUserDto.login !== this.env.DEFAULT_USER_LOGIN
+    ) {
       const user = await this.createUser({
         role: Role.Admin,
         ...createUserDto,
