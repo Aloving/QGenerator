@@ -4,9 +4,9 @@ import {
   Injectable,
   Logger,
   NestInterceptor,
-} from "@nestjs/common";
-import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
+} from '@nestjs/common';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class HttpInterceptor implements NestInterceptor {
@@ -14,13 +14,13 @@ export class HttpInterceptor implements NestInterceptor {
 
   intercept(
     context: ExecutionContext,
-    next: CallHandler<any>
+    next: CallHandler<any>,
   ): Observable<any> | Promise<Observable<any>> {
     return next.handle().pipe(
       map((data) => {
         this.logger.debug(data);
         return data;
-      })
+      }),
     );
   }
 }

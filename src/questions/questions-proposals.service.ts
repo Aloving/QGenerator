@@ -1,20 +1,20 @@
-import { Inject, Injectable } from "@nestjs/common";
-import { Repository } from "typeorm";
+import { Inject, Injectable } from '@nestjs/common';
+import { Repository } from 'typeorm';
 
-import { RepositoryEnum } from "../enums";
-import { QuestionProposal } from "./entities";
-import { CreateQuestionBaseDataDto } from "./dto";
+import { RepositoryEnum } from '../enums';
+import { QuestionProposal } from './entities';
+import { CreateQuestionBaseDataDto } from './dto';
 
-import { IQuestionProposalsService } from "./interfaces";
+import { IQuestionProposalsService } from './interfaces';
 
 @Injectable()
 export class QuestionProposalsService implements IQuestionProposalsService {
   constructor(
     @Inject(RepositoryEnum.QuestionsProposalsRepository)
-    private questionProposalRepository: Repository<QuestionProposal>
+    private questionProposalRepository: Repository<QuestionProposal>,
   ) {}
 
-  async acceptQuestionProposal(id: QuestionProposal["id"]) {
+  async acceptQuestionProposal(id: QuestionProposal['id']) {
     this.questionProposalRepository.delete(id);
 
     return true;
@@ -22,7 +22,7 @@ export class QuestionProposalsService implements IQuestionProposalsService {
 
   async offerQuestion(createQuestionBaseDataDto: CreateQuestionBaseDataDto) {
     const questionProposal = this.questionProposalRepository.create(
-      createQuestionBaseDataDto
+      createQuestionBaseDataDto,
     );
 
     return this.questionProposalRepository.save(questionProposal);
@@ -32,7 +32,7 @@ export class QuestionProposalsService implements IQuestionProposalsService {
     return this.questionProposalRepository.find();
   }
 
-  async findQuestionProposal(id: QuestionProposal["id"]) {
+  async findQuestionProposal(id: QuestionProposal['id']) {
     return this.questionProposalRepository.findOne(id);
   }
 }

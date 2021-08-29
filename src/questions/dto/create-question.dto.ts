@@ -1,12 +1,12 @@
-import { Length, IsNotEmpty, IsString } from "class-validator";
-import { ApiProperty } from "@nestjs/swagger";
+import { Length, IsNotEmpty, IsString } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
-import { Answer } from "../../answers";
-import { User } from "../../users";
+import { Answer } from '../../answers';
+import { User } from '../../users';
 
 export class CreateQuestionBaseDataDto {
   @ApiProperty({
-    description: "Text of a question",
+    description: 'Text of a question',
     maxLength: 150,
     minLength: 1,
     type: String,
@@ -17,32 +17,32 @@ export class CreateQuestionBaseDataDto {
   readonly text: string;
 
   @ApiProperty({
-    description: "Bound user id",
+    description: 'Bound user id',
     type: String,
     required: true,
   })
   @IsNotEmpty()
   @IsString()
-  readonly authorId: User["id"];
+  readonly authorId: User['id'];
 }
 
 export class CreateQuestionDto extends CreateQuestionBaseDataDto {
   @ApiProperty({
-    description: "Start number of likes",
+    description: 'Start number of likes',
     type: Number,
     default: 0,
   })
   readonly likes: number;
 
   @ApiProperty({
-    description: "Start number of dislikes",
+    description: 'Start number of dislikes',
     type: Number,
     default: 0,
   })
   readonly dislikes: number;
 
   @ApiProperty({
-    description: "Ready questions",
+    description: 'Ready questions',
     type: Answer,
     isArray: true,
   })

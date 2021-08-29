@@ -3,23 +3,23 @@ import {
   ExecutionContext,
   Injectable,
   UnauthorizedException,
-} from "@nestjs/common";
-import { Observable } from "rxjs";
-import { Reflector } from "@nestjs/core";
-import { ExtractJwt } from "passport-jwt";
+} from '@nestjs/common';
+import { Observable } from 'rxjs';
+import { Reflector } from '@nestjs/core';
+import { ExtractJwt } from 'passport-jwt';
 
-import { Role } from "../../enums";
-import { ROLES_KEY } from "../../decorators";
-import { CryptService } from "../../../crypt";
-import { JwtPayload } from "../../../auth/interfaces/jwt-payload.interface";
-import { UsersService } from "../../users.service";
+import { Role } from '../../enums';
+import { ROLES_KEY } from '../../decorators';
+import { CryptService } from '../../../crypt';
+import { JwtPayload } from '../../../auth/interfaces/jwt-payload.interface';
+import { UsersService } from '../../users.service';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
     private cryptService: CryptService,
-    private usersService: UsersService
+    private usersService: UsersService,
   ) {}
 
   async canActivate(context: ExecutionContext) {

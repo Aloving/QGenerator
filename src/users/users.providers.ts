@@ -1,7 +1,7 @@
-import { Connection } from "typeorm";
+import { Connection } from 'typeorm';
 
-import { RepositoryEnum, ProviderEnum } from "../enums";
-import { User } from "./entities";
+import { RepositoryEnum, ProviderEnum } from '../enums';
+import { User } from './entities';
 
 export const usersProviders = [
   {

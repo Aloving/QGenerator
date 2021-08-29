@@ -4,17 +4,17 @@ import {
   JoinTable,
   OneToMany,
   PrimaryGeneratedColumn,
-} from "typeorm";
-import { Exclude } from "class-transformer";
-import { IsEmail, IsNotEmpty, Length } from "class-validator";
+} from 'typeorm';
+import { Exclude } from 'class-transformer';
+import { IsEmail, IsNotEmpty, Length } from 'class-validator';
 
-import { Answer } from "../../answers";
-import { Question } from "../../questions";
-import { Role } from "../enums";
+import { Answer } from '../../answers';
+import { Question } from '../../questions';
+import { Role } from '../enums';
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({ unique: true })
@@ -42,15 +42,15 @@ export class User {
 
   @Length(6, 30, {
     message:
-      "The password must be at least 6 but not longer than 30 characters",
+      'The password must be at least 6 but not longer than 30 characters',
   })
-  @IsNotEmpty({ message: "The password is required" })
+  @IsNotEmpty({ message: 'The password is required' })
   @Exclude()
   @Column({ select: true })
   public password: string;
 
   @Column({
-    type: "enum",
+    type: 'enum',
     enum: Role,
     default: Role.User,
   })
@@ -58,6 +58,6 @@ export class User {
   public role: Role;
 
   @Column()
-  @IsEmail({}, { message: "Incorrect email" })
+  @IsEmail({}, { message: 'Incorrect email' })
   public email: string;
 }

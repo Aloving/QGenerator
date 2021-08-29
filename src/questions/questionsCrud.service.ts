@@ -1,8 +1,8 @@
-import { Repository } from "typeorm";
+import { Repository } from 'typeorm';
 
-import { UpdateQuestionDto, CreateQuestionDto } from "./dto";
-import { ICrudQuestionService } from "./interfaces";
-import { Question } from "./entities";
+import { UpdateQuestionDto, CreateQuestionDto } from './dto';
+import { ICrudQuestionService } from './interfaces';
+import { Question } from './entities';
 
 export class QuestionsCrudService implements ICrudQuestionService {
   constructor(public readonly questionRepository: Repository<Question>) {}
@@ -15,9 +15,9 @@ export class QuestionsCrudService implements ICrudQuestionService {
 
   async randomizeOne() {
     return await this.questionRepository
-      .createQueryBuilder("question")
-      .leftJoinAndSelect("question.answers", "answer")
-      .orderBy("RAND()")
+      .createQueryBuilder('question')
+      .leftJoinAndSelect('question.answers', 'answer')
+      .orderBy('RAND()')
       .getOne();
   }
 
@@ -25,7 +25,7 @@ export class QuestionsCrudService implements ICrudQuestionService {
     return await this.questionRepository.find();
   }
 
-  async findOne(id: Question["id"]): Promise<Question> {
+  async findOne(id: Question['id']): Promise<Question> {
     return await this.questionRepository.findOne(id);
   }
 

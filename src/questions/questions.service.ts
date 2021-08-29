@@ -1,37 +1,36 @@
-import { Inject, Injectable } from "@nestjs/common";
-import { Repository } from "typeorm";
+import { Inject, Injectable } from '@nestjs/common';
+import { Repository } from 'typeorm';
 
-import { RepositoryEnum } from "../enums";
-import { QuestionsCrudService } from "./questionsCrud.service";
-import { IQuestionService } from "./interfaces";
-import { Question, QuestionProposal } from "./entities";
-import { CreateQuestionBaseDataDto, AcceptQuestionProposal } from "./dto";
-import { QuestionProposalsService } from "./questions-proposals.service";
+import { RepositoryEnum } from '../enums';
+import { QuestionsCrudService } from './questionsCrud.service';
+import { IQuestionService } from './interfaces';
+import { Question, QuestionProposal } from './entities';
+import { CreateQuestionBaseDataDto, AcceptQuestionProposal } from './dto';
+import { QuestionProposalsService } from './questions-proposals.service';
 
 @Injectable()
 export class QuestionsService
   extends QuestionsCrudService
-  implements IQuestionService {
+  implements IQuestionService
+{
   constructor(
     @Inject(RepositoryEnum.QuestionRepository)
     public readonly questionRepository: Repository<Question>,
-    private readonly proposalsService: QuestionProposalsService
+    private readonly proposalsService: QuestionProposalsService,
   ) {
     super(questionRepository);
   }
 
-  async acceptQuestionProposal(proposalId: QuestionProposal["id"]) {
-    const {
-      id: _id,
-      ...proposal
-    } = await this.proposalsService.findQuestionProposal(proposalId);
+  async acceptQuestionProposal(proposalId: QuestionProposal['id']) {
+    const { id: _id, ...proposal } =
+      await this.proposalsService.findQuestionProposal(proposalId);
 
     this.proposalsService.acceptQuestionProposal(proposalId);
 
     return this.create({ ...proposal, likes: 0, dislikes: 0, answers: [] });
   }
 
-  async findQuestionProposal(proposalId: QuestionProposal["id"]) {
+  async findQuestionProposal(proposalId: QuestionProposal['id']) {
     return this.proposalsService.findQuestionProposal(proposalId);
   }
 

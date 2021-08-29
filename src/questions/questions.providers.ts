@@ -11,7 +11,8 @@ export const questionsProviders = [
   },
   {
     provide: RepositoryEnum.QuestionsProposalsRepository,
-    useFactory: (connection: Connection) => connection.getRepository(QuestionProposal),
+    useFactory: (connection: Connection) =>
+      connection.getRepository(QuestionProposal),
     inject: [ProviderEnum.DatabaseConnection],
   },
 ];

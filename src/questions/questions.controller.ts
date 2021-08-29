@@ -9,108 +9,108 @@ import {
   Put,
   UseGuards,
   UseInterceptors,
-} from "@nestjs/common";
-import { ApiBearerAuth, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { QuestionsService } from "./questions.service";
+import { QuestionsService } from './questions.service';
 import {
   CreateQuestionBaseDataDto,
   CreateQuestionDto,
   GetRandomQuestionDto,
   GetRandomQuestionResponseDto,
   UpdateQuestionDto,
-} from "./dto";
-import { Question, QuestionProposal } from "./entities";
-import { AuthGuard } from "@nestjs/passport";
-import { Roles } from "../users/decorators";
-import { Role } from "../users/enums";
-import { RolesGuard } from "../users/guards";
+} from './dto';
+import { Question, QuestionProposal } from './entities';
+import { AuthGuard } from '@nestjs/passport';
+import { Roles } from '../users/decorators';
+import { Role } from '../users/enums';
+import { RolesGuard } from '../users/guards';
 
-@ApiTags("questions")
-@Controller("questions")
+@ApiTags('questions')
+@Controller('questions')
 export class QuestionsController {
   constructor(private readonly questionsService: QuestionsService) {}
 
-  @Put("/proposal")
+  @Put('/proposal')
   @ApiResponse({
     status: 200,
     type: QuestionProposal,
-    description: "point to propose a question",
+    description: 'point to propose a question',
   })
   @UseInterceptors(ClassSerializerInterceptor)
   proposeQuestion(
-    @Body() createQuestionBaseDataDto: CreateQuestionBaseDataDto
+    @Body() createQuestionBaseDataDto: CreateQuestionBaseDataDto,
   ) {
     return this.questionsService.offerQuestion(createQuestionBaseDataDto);
   }
 
-  @Put("/proposal/:id/accept")
+  @Put('/proposal/:id/accept')
   @ApiParam({
-    name: "id",
+    name: 'id',
   })
   @ApiResponse({
     status: 200,
     type: Question,
-    description: "point to propose a question",
+    description: 'point to propose a question',
   })
-  @ApiBearerAuth("access-token")
-  @UseGuards(AuthGuard("jwt"))
+  @ApiBearerAuth('access-token')
+  @UseGuards(AuthGuard('jwt'))
   @Roles(Role.Admin, Role.Moderator)
   @UseGuards(RolesGuard)
-  acceptProposal(@Param("id") id: QuestionProposal["id"]) {
+  acceptProposal(@Param('id') id: QuestionProposal['id']) {
     return this.questionsService.acceptQuestionProposal(id);
   }
 
-  @Get("/proposals")
+  @Get('/proposals')
   @ApiResponse({
     status: 200,
     type: QuestionProposal,
     isArray: true,
-    description: "Find all questions proposals",
+    description: 'Find all questions proposals',
   })
-  @ApiBearerAuth("access-token")
-  @UseGuards(AuthGuard("jwt"))
+  @ApiBearerAuth('access-token')
+  @UseGuards(AuthGuard('jwt'))
   @Roles(Role.Admin, Role.Moderator)
   @UseGuards(RolesGuard)
   getAllProposes() {
     return this.questionsService.findAllQuestionProposals();
   }
 
-  @Post("/create")
+  @Post('/create')
   @ApiResponse({
     status: 200,
     type: Question,
-    description: "A point to create question",
+    description: 'A point to create question',
   })
-  @ApiBearerAuth("access-token")
-  @UseGuards(AuthGuard("jwt"))
+  @ApiBearerAuth('access-token')
+  @UseGuards(AuthGuard('jwt'))
   @Roles(Role.Admin, Role.Moderator)
   @UseGuards(RolesGuard)
   create(@Body() createQuestionDto: CreateQuestionDto) {
     return this.questionsService.create(createQuestionDto);
   }
 
-  @Post("/randomize")
+  @Post('/randomize')
   @ApiResponse({
     status: 200,
     type: GetRandomQuestionResponseDto,
-    description: "Path to get random question, it supports id excluding",
+    description: 'Path to get random question, it supports id excluding',
   })
   randomizeQuestion(@Body() { excludeIds }: GetRandomQuestionDto) {
     return this.questionsService.randomize(excludeIds);
   }
 
-  @Get(":id")
+  @Get(':id')
   @ApiResponse({
     status: 200,
     type: Question,
-    description: "Endpoint to get certain question by id",
+    description: 'Endpoint to get certain question by id',
   })
-  @ApiBearerAuth("access-token")
-  @UseGuards(AuthGuard("jwt"))
+  @ApiBearerAuth('access-token')
+  @UseGuards(AuthGuard('jwt'))
   @Roles(Role.Admin, Role.Moderator)
   @UseGuards(RolesGuard)
-  getQuestion(@Param("id") id: string) {
+  getQuestion(@Param('id') id: string) {
     return this.questionsService.findOne(+id);
   }
 
@@ -119,88 +119,88 @@ export class QuestionsController {
     status: 200,
     type: Question,
     isArray: true,
-    description: "Point to get all questions",
+    description: 'Point to get all questions',
   })
-  @ApiBearerAuth("access-token")
-  @UseGuards(AuthGuard("jwt"))
+  @ApiBearerAuth('access-token')
+  @UseGuards(AuthGuard('jwt'))
   @Roles(Role.Admin, Role.Moderator)
   @UseGuards(RolesGuard)
   findAll() {
     return this.questionsService.findAll();
   }
 
-  @Put(":id")
+  @Put(':id')
   @ApiResponse({
     status: 200,
     type: Question,
-    description: "Point to update an existing question",
+    description: 'Point to update an existing question',
   })
-  @UseGuards(AuthGuard("jwt"))
+  @UseGuards(AuthGuard('jwt'))
   @Roles(Role.Admin, Role.Moderator)
   @UseGuards(RolesGuard)
   update(
-    @Param("id") id: string,
-    @Body() updateQuestionDto: UpdateQuestionDto
+    @Param('id') id: string,
+    @Body() updateQuestionDto: UpdateQuestionDto,
   ) {
     return this.questionsService.update(+id, updateQuestionDto);
   }
 
-  @Delete("/:id")
-  @ApiParam({ name: "id" })
+  @Delete('/:id')
+  @ApiParam({ name: 'id' })
   @ApiResponse({
     status: 200,
     type: Boolean,
-    description: "A point to delete question out of the app",
+    description: 'A point to delete question out of the app',
   })
-  @ApiBearerAuth("access-token")
-  @UseGuards(AuthGuard("jwt"))
+  @ApiBearerAuth('access-token')
+  @UseGuards(AuthGuard('jwt'))
   @Roles(Role.Admin, Role.Moderator)
   @UseGuards(RolesGuard)
-  remove(@Param("id") id: string) {
+  remove(@Param('id') id: string) {
     return this.questionsService.remove(+id);
   }
 
-  @Put("/:id/increaseLikes")
-  @ApiParam({ name: "id" })
+  @Put('/:id/increaseLikes')
+  @ApiParam({ name: 'id' })
   @ApiResponse({
     status: 200,
     type: Question,
-    description: "Point to increase likes of a question",
+    description: 'Point to increase likes of a question',
   })
-  increaseLikes(@Param("id") id: number | string) {
+  increaseLikes(@Param('id') id: number | string) {
     return this.questionsService.increaseLikes(+id);
   }
 
-  @Put("/:id/decreaseLikes")
-  @ApiParam({ name: "id" })
+  @Put('/:id/decreaseLikes')
+  @ApiParam({ name: 'id' })
   @ApiResponse({
     status: 200,
     type: Question,
-    description: "Point to decrease likes of a question",
+    description: 'Point to decrease likes of a question',
   })
-  decreaseLikes(@Param("id") id: number | string) {
+  decreaseLikes(@Param('id') id: number | string) {
     return this.questionsService.decreaseLikes(+id);
   }
 
-  @Put("/:id/increaseDislikes")
-  @ApiParam({ name: "id" })
+  @Put('/:id/increaseDislikes')
+  @ApiParam({ name: 'id' })
   @ApiResponse({
     status: 200,
     type: Question,
-    description: "Point to increase likes of a question",
+    description: 'Point to increase likes of a question',
   })
-  increaseDislikes(@Param("id") id: number | string) {
+  increaseDislikes(@Param('id') id: number | string) {
     return this.questionsService.increaseDislikes(+id);
   }
 
-  @Put("/:id/decreaseDislikes")
-  @ApiParam({ name: "id" })
+  @Put('/:id/decreaseDislikes')
+  @ApiParam({ name: 'id' })
   @ApiResponse({
     status: 200,
     type: Question,
-    description: "Point to decrease likes of a question",
+    description: 'Point to decrease likes of a question',
   })
-  decreaseDislikes(@Param("id") id: number | string) {
+  decreaseDislikes(@Param('id') id: number | string) {
     return this.questionsService.decreaseDislikes(+id);
   }
 }

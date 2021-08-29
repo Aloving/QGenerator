@@ -2,24 +2,24 @@ import {
   GoneException,
   Injectable,
   UnauthorizedException,
-} from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
+} from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 
-import { User } from "../users";
-import { UsersService } from "../users";
-import { CryptService } from "../crypt/";
+import { User } from '../users';
+import { UsersService } from '../users';
+import { CryptService } from '../crypt/';
 
-import { JwtPayload } from "./interfaces/jwt-payload.interface";
-import { AuthService as IAuthService } from "./interfaces/auth-service.interface";
-import { LoginDto } from "./dto/login.dto";
-import { TokenRefreshDto } from "./dto/token-refresh.dto";
-import { TokensPair } from "../interfaces";
+import { JwtPayload } from './interfaces/jwt-payload.interface';
+import { AuthService as IAuthService } from './interfaces/auth-service.interface';
+import { LoginDto } from './dto/login.dto';
+import { TokenRefreshDto } from './dto/token-refresh.dto';
+import { TokensPair } from '../interfaces';
 
 @Injectable()
 export class AuthService implements IAuthService {
   constructor(
     private readonly userService: UsersService,
-    private readonly cryptService: CryptService
+    private readonly cryptService: CryptService,
   ) {}
 
   async login({ login, password }: LoginDto) {

@@ -25,9 +25,8 @@ export const compileTestQuestionModule = async () => {
       QuestionsService,
     ],
   }).compile();
-  const questionController = moduleRef.get<QuestionsController>(
-    QuestionsController,
-  );
+  const questionController =
+    moduleRef.get<QuestionsController>(QuestionsController);
   const questionService = moduleRef.get<QuestionsService>(QuestionsService);
   const questionRepository = moduleRef.get<Repository<Question>>(
     RepositoryEnum.QuestionRepository,

@@ -1,10 +1,10 @@
-import { Injectable } from "@nestjs/common";
-import { hash, compare } from "bcrypt";
-import { v4 as uuid } from "uuid";
-import { JwtService } from "@nestjs/jwt";
+import { Injectable } from '@nestjs/common';
+import { hash, compare } from 'bcrypt';
+import { v4 as uuid } from 'uuid';
+import { JwtService } from '@nestjs/jwt';
 
-import { CryptService as ICryptService } from "./interfaces/crypt-service.interface";
-import { User } from "../users";
+import { CryptService as ICryptService } from './interfaces/crypt-service.interface';
+import { User } from '../users';
 
 @Injectable()
 export class CryptService implements ICryptService {
@@ -19,7 +19,7 @@ export class CryptService implements ICryptService {
     return this.jwtService.decode(token) as T;
   }
 
-  createToken(id: User["id"]) {
+  createToken(id: User['id']) {
     const accessToken = this.jwtService.sign({ id });
     const refreshToken = this.generateRandomId();
 

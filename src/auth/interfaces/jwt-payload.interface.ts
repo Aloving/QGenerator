@@ -1,5 +1,5 @@
-import { User } from "../../users";
+import { User } from '../../users';
 
 export interface JwtPayload {
-  id: User["id"];
+  id: User['id'];
 }

@@ -4,22 +4,22 @@ import {
   Inject,
   Injectable,
   OnApplicationBootstrap,
-} from "@nestjs/common";
-import { Repository } from "typeorm";
+} from '@nestjs/common';
+import { Repository } from 'typeorm';
 
-import { ProviderEnum, RepositoryEnum } from "../enums";
+import { ProviderEnum, RepositoryEnum } from '../enums';
 import {
   AddRefreshTokenDto,
   CreateUserDto,
   FindUserByIdDto,
   FindUserByLoginDto,
   FindUserByRefreshTokenDto,
-} from "./dto";
-import { User } from "./entities";
-import { IUserService } from "./interfaces";
-import { CryptService } from "../crypt";
-import { Role } from "./enums";
-import { IEnv } from "../env";
+} from './dto';
+import { User } from './entities';
+import { IUserService } from './interfaces';
+import { CryptService } from '../crypt';
+import { Role } from './enums';
+import { IEnv } from '../env';
 
 @Injectable()
 export class UsersService implements IUserService, OnApplicationBootstrap {
@@ -29,7 +29,7 @@ export class UsersService implements IUserService, OnApplicationBootstrap {
     private cryptService: CryptService,
     @Inject(RepositoryEnum.UserRepository)
     private userRepository: Repository<User>,
-    @Inject(ProviderEnum.Env) private env: IEnv
+    @Inject(ProviderEnum.Env) private env: IEnv,
   ) {}
 
   async onApplicationBootstrap() {
@@ -61,8 +61,8 @@ export class UsersService implements IUserService, OnApplicationBootstrap {
 
       if (user) {
         throw new HttpException(
-          "User is already exists",
-          HttpStatus.UNPROCESSABLE_ENTITY
+          'User is already exists',
+          HttpStatus.UNPROCESSABLE_ENTITY,
         );
       }
 
@@ -73,8 +73,8 @@ export class UsersService implements IUserService, OnApplicationBootstrap {
       });
     } catch (e) {
       throw new HttpException(
-        "User is already exists",
-        HttpStatus.UNPROCESSABLE_ENTITY
+        'User is already exists',
+        HttpStatus.UNPROCESSABLE_ENTITY,
       );
     }
   }
@@ -129,7 +129,7 @@ export class UsersService implements IUserService, OnApplicationBootstrap {
     await this.userRepository.update(userId, { refreshToken });
   }
 
-  async deleteRefreshToken(userId: User["id"]): Promise<void> {
+  async deleteRefreshToken(userId: User['id']): Promise<void> {
     await this.userRepository.update(userId, { refreshToken: null });
   }
 }
