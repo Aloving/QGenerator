@@ -3,6 +3,7 @@ import {
   ClassSerializerInterceptor,
   Controller,
   Get,
+  Param,
   Post,
   UseGuards,
   UseInterceptors,
@@ -20,7 +21,7 @@ import { RolesGuard } from './guards';
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
-  constructor(private readonly questionsService: UsersService) {}
+  constructor(private readonly usersService: UsersService) {}
 
   @Post('/create')
   @ApiResponse({
@@ -30,7 +31,7 @@ export class UsersController {
   })
   @UseInterceptors(ClassSerializerInterceptor)
   async create(@Body() createUser: CreateUserDto) {
-    return this.questionsService.create(createUser);
+    return this.usersService.create(createUser);
   }
 
   @Get()
@@ -46,6 +47,17 @@ export class UsersController {
   @Roles(Role.Admin, Role.Moderator)
   @UseGuards(RolesGuard)
   async findAll() {
-    return this.questionsService.findAllUsers();
+    return this.usersService.findAllUsers();
+  }
+
+  @Get('/:login')
+  @ApiResponse({
+    status: 200,
+    type: User,
+    description: 'A point to get account by login',
+  })
+  @UseInterceptors(ClassSerializerInterceptor)
+  async findByLogin(@Param('login') login: string) {
+    return this.usersService.findUserByLogin({ login });
   }
 }
