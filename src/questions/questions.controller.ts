@@ -1,6 +1,5 @@
 import {
   Body,
-  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -8,73 +7,25 @@ import {
   Post,
   Put,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 
 import { QuestionsService } from './questions.service';
 import {
-  CreateQuestionBaseDataDto,
   CreateQuestionDto,
   GetRandomQuestionDto,
   GetRandomQuestionResponseDto,
   UpdateQuestionDto,
 } from './dto';
-import { Question, QuestionProposal } from './entities';
-import { AuthGuard } from '@nestjs/passport';
+import { Question } from './entities';
 import { Roles } from '../users/decorators';
-import { Role } from '../users/enums';
-import { RolesGuard } from '../users/guards';
+import { Role, RolesGuard } from '../users';
 
 @ApiTags('questions')
 @Controller('questions')
 export class QuestionsController {
   constructor(private readonly questionsService: QuestionsService) {}
-
-  @Put('/proposal')
-  @ApiResponse({
-    status: 200,
-    type: QuestionProposal,
-    description: 'point to propose a question',
-  })
-  @UseInterceptors(ClassSerializerInterceptor)
-  proposeQuestion(
-    @Body() createQuestionBaseDataDto: CreateQuestionBaseDataDto,
-  ) {
-    return this.questionsService.offerQuestion(createQuestionBaseDataDto);
-  }
-
-  @Put('/proposal/:id/accept')
-  @ApiParam({
-    name: 'id',
-  })
-  @ApiResponse({
-    status: 200,
-    type: Question,
-    description: 'point to propose a question',
-  })
-  @ApiBearerAuth('access-token')
-  @UseGuards(AuthGuard('jwt'))
-  @Roles(Role.Admin, Role.Moderator)
-  @UseGuards(RolesGuard)
-  acceptProposal(@Param('id') id: QuestionProposal['id']) {
-    return this.questionsService.acceptQuestionProposal(id);
-  }
-
-  @Get('/proposals')
-  @ApiResponse({
-    status: 200,
-    type: QuestionProposal,
-    isArray: true,
-    description: 'Find all questions proposals',
-  })
-  @ApiBearerAuth('access-token')
-  @UseGuards(AuthGuard('jwt'))
-  @Roles(Role.Admin, Role.Moderator)
-  @UseGuards(RolesGuard)
-  getAllProposes() {
-    return this.questionsService.findAllQuestionProposals();
-  }
 
   @Post('/create')
   @ApiResponse({

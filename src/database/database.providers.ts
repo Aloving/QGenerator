@@ -5,7 +5,8 @@ import { ProviderEnum } from '../enums';
 import { IEnv } from '../env';
 import { User } from '../users';
 import { Answer } from '../answers';
-import { Question, QuestionProposal } from '../questions';
+import { Question } from '../questions';
+import { QuestionProposal } from '../question-proposals/entities';
 
 export const databaseProviders = [
   {

@@ -10,6 +10,7 @@ import {
 
 import { User } from '../../users';
 import { Question } from '../../questions/entities';
+import { IAnswer } from '../interfaces';
 
 @Entity()
 export class AnswerData {
@@ -62,7 +63,7 @@ export class AnswerData {
 }
 
 @Entity()
-export class Answer extends AnswerData {
+export class Answer extends AnswerData implements IAnswer {
   @ApiProperty({
     type: String,
     description: 'Unique ID',

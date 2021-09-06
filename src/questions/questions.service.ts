@@ -4,44 +4,17 @@ import { Repository } from 'typeorm';
 import { RepositoryEnum } from '../enums';
 import { QuestionsCrudService } from './questionsCrud.service';
 import { IQuestionService } from './interfaces';
-import { Question, QuestionProposal } from './entities';
-import { CreateQuestionBaseDataDto, AcceptQuestionProposal } from './dto';
-import { QuestionProposalsService } from './questions-proposals.service';
+import { Question } from './entities';
 
 @Injectable()
 export class QuestionsService
   extends QuestionsCrudService
-  implements IQuestionService
-{
+  implements IQuestionService {
   constructor(
     @Inject(RepositoryEnum.QuestionRepository)
     public readonly questionRepository: Repository<Question>,
-    private readonly proposalsService: QuestionProposalsService,
   ) {
     super(questionRepository);
-  }
-
-  async acceptQuestionProposal(proposalId: QuestionProposal['id']) {
-    const { id: _id, ...proposal } =
-      await this.proposalsService.findQuestionProposal(proposalId);
-
-    this.proposalsService.acceptQuestionProposal(proposalId);
-
-    return this.create({ ...proposal, likes: 0, dislikes: 0, answers: [] });
-  }
-
-  async findQuestionProposal(proposalId: QuestionProposal['id']) {
-    return this.proposalsService.findQuestionProposal(proposalId);
-  }
-
-  async offerQuestion(data: CreateQuestionBaseDataDto) {
-    return this.proposalsService.offerQuestion({
-      ...data,
-    });
-  }
-
-  async findAllQuestionProposals() {
-    return this.proposalsService.findAllQuestionProposals();
   }
 
   async randomize(excludeIds: number[]) {
@@ -67,7 +40,7 @@ export class QuestionsService
 
     return this.update(id, {
       ...questionToUpdate,
-      likes: questionToUpdate.likes - 1,
+      likes: String(+questionToUpdate.likes - 1),
     });
   }
 
@@ -85,7 +58,7 @@ export class QuestionsService
 
     return this.update(id, {
       ...questionToUpdate,
-      dislikes: questionToUpdate.dislikes - 1,
+      dislikes: String(+questionToUpdate.dislikes - 1),
     });
   }
 }

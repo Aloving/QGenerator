@@ -12,11 +12,13 @@ import { HttpInterceptor } from './HttpInterceptor';
 import { AuthModule } from './auth';
 import { CryptModule } from './crypt';
 import { RolesGuard } from './users/guards';
+import { QuestionProposalsModule } from './question-proposals';
 
 @Module({
   imports: [
     HttpInterceptor,
     QuestionsModule,
+    QuestionProposalsModule,
     UsersModule,
     AnswersModule,
     DatabaseModule,

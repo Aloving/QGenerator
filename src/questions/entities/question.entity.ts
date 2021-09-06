@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty } from 'class-validator';
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -10,7 +11,8 @@ import {
 } from 'typeorm';
 
 import { Answer } from '../../answers';
-import { User } from '../../users/entities';
+import { User } from '../../users';
+import { IQuestionData } from '../interfaces';
 
 export class QuestionBaseData {
   @ApiProperty({
@@ -31,32 +33,32 @@ export class QuestionBaseData {
   @Column()
   authorId: string;
 
-  @ManyToOne(() => User, (user) => user.answers)
+  @ManyToOne(() => User, (user) => user.questions)
   @JoinColumn({ name: 'authorId', referencedColumnName: 'id' })
   author: User;
 }
 
 @Entity()
-export class QuestionData extends QuestionBaseData {
+export class QuestionData extends QuestionBaseData implements IQuestionData {
   @ApiProperty({
     description: 'Likes count',
-    default: 0,
-    type: Number,
+    default: '0',
+    type: String,
   })
   @Column({
-    default: 0,
+    default: '0',
   })
-  likes: number;
+  likes: string;
 
   @ApiProperty({
     description: 'Dislikes count',
-    default: 0,
-    type: Number,
+    default: '0',
+    type: String,
   })
   @Column({
-    default: 0,
+    default: '0',
   })
-  dislikes: number;
+  dislikes: string;
 
   @ApiProperty({
     description: 'The answers',

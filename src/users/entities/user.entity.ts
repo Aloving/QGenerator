@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { IsEmail, IsNotEmpty, Length } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 import { Answer } from '../../answers';
 import { Question } from '../../questions';
@@ -46,15 +47,19 @@ export class User {
   })
   @IsNotEmpty({ message: 'The password is required' })
   @Exclude()
-  @Column({ select: true })
+  @Column()
   public password: string;
 
+  @ApiProperty({
+    enum: [Role.User, Role.Admin, Role.Moderator],
+    description: 'User role',
+  })
+  @IsNotEmpty()
   @Column({
     type: 'enum',
     enum: Role,
     default: Role.User,
   })
-  @IsNotEmpty()
   public role: Role;
 
   @Column()

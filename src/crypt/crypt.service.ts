@@ -11,7 +11,6 @@ export class CryptService implements ICryptService {
   constructor(private readonly jwtService: JwtService) {}
 
   async hashPassword(password: string): Promise<string> {
-    // @todo research about the second argument
     return hash(password, 10);
   }
 
