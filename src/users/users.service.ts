@@ -14,6 +14,7 @@ import {
   FindUserByIdDto,
   FindUserByLoginDto,
   FindUserByRefreshTokenDto,
+  FindUsersById,
 } from './dto';
 import { User } from './entities';
 import { IUserService } from './interfaces';
@@ -108,6 +109,10 @@ export class UsersService implements IUserService, OnApplicationBootstrap {
 
   findUserById({ id }: FindUserByIdDto): Promise<User> {
     return this.userRepository.findOne({ id });
+  }
+
+  findByIds({ ids }: FindUsersById): Promise<User[]> {
+    return this.userRepository.findByIds(ids);
   }
 
   findUserByLogin({ login }: FindUserByLoginDto): Promise<User> {

@@ -1,26 +1,22 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { flatten, Inject, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { flatten } from 'lodash';
+import { uniq } from 'lodash';
 
 import { RepositoryEnum } from '../enums';
 import { QuestionProposal } from './entities';
 import { CreateQuestionBaseDataDto } from '../questions/dto';
+import { QuestionProposalWithUserDto } from './dto';
 
 import { IQuestionProposalsService } from './interfaces';
 import { QuestionProposalStatusEnum } from './enums';
+import { User, UsersService } from '../users';
 
 @Injectable()
 export class QuestionProposalsService implements IQuestionProposalsService {
-  private questionDefaults = {
-    likes: '0',
-    dislikes: '0',
-    answers: [],
-    text: '',
-  };
-
   constructor(
     @Inject(RepositoryEnum.QuestionsProposalsRepository)
     private questionProposalRepository: Repository<QuestionProposal>,
+    private usersService: UsersService,
   ) {}
 
   async acceptQuestionProposal(id: QuestionProposal['id']) {
@@ -28,7 +24,7 @@ export class QuestionProposalsService implements IQuestionProposalsService {
       status: QuestionProposalStatusEnum.Accepted,
     });
 
-    return await this.questionProposalRepository.findOne(id);
+    return await this.findQuestionProposal(id);
   }
 
   async declineQuestionProposal(id: QuestionProposal['id']) {
@@ -36,19 +32,24 @@ export class QuestionProposalsService implements IQuestionProposalsService {
       status: QuestionProposalStatusEnum.Declined,
     });
 
-    return await this.questionProposalRepository.findOne(id);
+    return await this.findQuestionProposal(id);
   }
 
   async offerQuestion(createQuestionBaseDataDto: CreateQuestionBaseDataDto) {
     const questionProposal = this.questionProposalRepository.create(
       createQuestionBaseDataDto,
     );
+    const savedProposal = await this.questionProposalRepository.save(
+      questionProposal,
+    );
 
-    return this.questionProposalRepository.save(questionProposal);
+    return this.findQuestionProposal(savedProposal.id);
   }
 
   async findAllQuestionProposals() {
     const proposals = await this.questionProposalRepository.find();
+    const authorIds = uniq(proposals.map((proposal) => proposal.authorId));
+    const authors = await this.usersService.findByIds({ ids: authorIds });
     const sorted = proposals.reduce(
       (acc, cur) => {
         if (cur.status === QuestionProposalStatusEnum.Declined) {
@@ -85,11 +86,35 @@ export class QuestionProposalsService implements IQuestionProposalsService {
         [QuestionProposalStatusEnum.Active]: [],
       },
     );
+    const questionProposals = flatten(Object.values(sorted));
+    const withAuthors: QuestionProposalWithUserDto[] = questionProposals.map(
+      (proposal) => {
+        const user = authors.find((author) => author.id === proposal.authorId);
 
-    return flatten(Object.values(sorted)) as QuestionProposal[];
+        return this.mergeProposalAndUserData(user, proposal);
+      },
+    );
+
+    return withAuthors;
   }
 
   async findQuestionProposal(id: QuestionProposal['id']) {
-    return this.questionProposalRepository.findOne(id);
+    const proposal = await this.questionProposalRepository.findOne(id);
+    const user = await this.usersService.findUserById({
+      id: proposal.authorId,
+    });
+
+    return this.mergeProposalAndUserData(user, proposal);
+  }
+
+  private mergeProposalAndUserData(
+    user: User,
+    proposal: QuestionProposal,
+  ): QuestionProposalWithUserDto {
+    return {
+      ...proposal,
+      login: user.login,
+      role: user.role,
+    };
   }
 }

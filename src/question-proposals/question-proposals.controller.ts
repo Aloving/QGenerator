@@ -16,6 +16,7 @@ import { Roles } from '../users/decorators';
 import { Role, RolesGuard } from '../users';
 import { QuestionProposalsService } from './question-proposals.service';
 import { QuestionProposal } from './entities';
+import { QuestionProposalWithUserDto } from './dto';
 
 @ApiTags('question-proposals')
 @Controller('proposals/questions')
@@ -25,7 +26,7 @@ export class QuestionProposalsController {
   @Get('/proposals')
   @ApiResponse({
     status: 200,
-    type: QuestionProposal,
+    type: QuestionProposalWithUserDto,
     isArray: true,
     description: 'Find all questions proposals',
   })
@@ -40,7 +41,7 @@ export class QuestionProposalsController {
   @Put('/propose')
   @ApiResponse({
     status: 200,
-    type: QuestionProposal,
+    type: QuestionProposalWithUserDto,
     description: 'point to propose a question',
   })
   @UseInterceptors(ClassSerializerInterceptor)
@@ -56,7 +57,7 @@ export class QuestionProposalsController {
   })
   @ApiResponse({
     status: 200,
-    type: QuestionProposal,
+    type: QuestionProposalWithUserDto,
     description: 'Point to accept a question',
   })
   @ApiBearerAuth('access-token')
@@ -73,7 +74,7 @@ export class QuestionProposalsController {
   })
   @ApiResponse({
     status: 200,
-    type: QuestionProposal,
+    type: QuestionProposalWithUserDto,
     description: 'Point to decline a question',
   })
   @ApiBearerAuth('access-token')
