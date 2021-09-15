@@ -23,7 +23,7 @@ import { QuestionProposalWithUserDto } from './dto';
 export class QuestionProposalsController {
   constructor(private readonly proposalsService: QuestionProposalsService) {}
 
-  @Get('/proposals')
+  @Get()
   @ApiResponse({
     status: 200,
     type: QuestionProposalWithUserDto,
@@ -51,7 +51,7 @@ export class QuestionProposalsController {
     return this.proposalsService.offerQuestion(createQuestionBaseDataDto);
   }
 
-  @Put('/proposal/:id/accept')
+  @Put('/:id/accept')
   @ApiParam({
     name: 'id',
   })
@@ -68,7 +68,7 @@ export class QuestionProposalsController {
     return this.proposalsService.acceptQuestionProposal(id);
   }
 
-  @Put('/proposal/:id/decline')
+  @Put('/:id/decline')
   @ApiParam({
     name: 'id',
   })
