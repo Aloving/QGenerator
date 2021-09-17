@@ -10,18 +10,28 @@ import { QuestionProposalWithUserDto } from './dto';
 import { IQuestionProposalsService } from './interfaces';
 import { QuestionProposalStatusEnum } from './enums';
 import { User, UsersService } from '../users';
+import { QuestionsService } from '../questions';
 
 @Injectable()
 export class QuestionProposalsService implements IQuestionProposalsService {
   constructor(
     @Inject(RepositoryEnum.QuestionsProposalsRepository)
     private questionProposalRepository: Repository<QuestionProposal>,
+    private questionService: QuestionsService,
     private usersService: UsersService,
   ) {}
 
   async acceptQuestionProposal(id: QuestionProposal['id']) {
     await this.questionProposalRepository.update(id, {
       status: QuestionProposalStatusEnum.Accepted,
+    });
+    const proposal = await this.findQuestionProposal(id);
+    await this.questionService.create({
+      text: proposal.text,
+      authorId: proposal.authorId,
+      likes: '0',
+      dislikes: '0',
+      answers: [],
     });
 
     return await this.findQuestionProposal(id);
