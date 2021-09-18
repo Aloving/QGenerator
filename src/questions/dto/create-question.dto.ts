@@ -3,6 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 import { Answer } from '../../answers';
 import { User } from '../../users';
+import { QuestionProposal } from '../../question-proposals';
 
 export class CreateQuestionBaseDataDto {
   @ApiProperty({
@@ -47,4 +48,10 @@ export class CreateQuestionDto extends CreateQuestionBaseDataDto {
     isArray: true,
   })
   readonly answers: Answer[];
+
+  @ApiProperty({
+    description: 'Bound proposal ID',
+    type: String,
+  })
+  readonly proposalId?: QuestionProposal['id'];
 }

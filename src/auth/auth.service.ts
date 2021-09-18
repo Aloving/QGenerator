@@ -1,4 +1,5 @@
 import {
+  ForbiddenException,
   GoneException,
   Injectable,
   UnauthorizedException,
@@ -68,6 +69,10 @@ export class AuthService implements IAuthService {
   async getUserByToken(token: string): Promise<User | undefined> {
     const jwtPayload = this.cryptService.decodeToken<JwtPayload>(token);
 
-    return await this.userService.findUserById({ id: jwtPayload.id });
+    try {
+      return await this.userService.findUserById({ id: jwtPayload.id });
+    } catch (e) {
+      throw new ForbiddenException();
+    }
   }
 }

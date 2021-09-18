@@ -12,6 +12,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Answer } from '../../answers';
 import { Question } from '../../questions';
 import { Role } from '../enums';
+import { QuestionProposal } from '../../question-proposals/entities';
 
 @Entity()
 export class User {
@@ -34,6 +35,13 @@ export class User {
   })
   @JoinTable()
   questions: Question[];
+
+  @OneToMany(() => QuestionProposal, (question) => question.author, {
+    cascade: true,
+    eager: true,
+  })
+  @JoinTable()
+  questionProposals: QuestionProposal[];
 
   @Exclude()
   @Column({

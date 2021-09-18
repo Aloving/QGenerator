@@ -22,16 +22,19 @@ export class QuestionProposalsService implements IQuestionProposalsService {
   ) {}
 
   async acceptQuestionProposal(id: QuestionProposal['id']) {
-    await this.questionProposalRepository.update(id, {
-      status: QuestionProposalStatusEnum.Accepted,
-    });
     const proposal = await this.findQuestionProposal(id);
-    await this.questionService.create({
+    const newQuestion = await this.questionService.create({
       text: proposal.text,
       authorId: proposal.authorId,
+      proposalId: proposal.id,
       likes: '0',
       dislikes: '0',
       answers: [],
+    });
+
+    await this.questionProposalRepository.update(id, {
+      questionId: newQuestion.id,
+      status: QuestionProposalStatusEnum.Accepted,
     });
 
     return await this.findQuestionProposal(id);
@@ -41,6 +44,11 @@ export class QuestionProposalsService implements IQuestionProposalsService {
     await this.questionProposalRepository.update(id, {
       status: QuestionProposalStatusEnum.Declined,
     });
+    const proposal = await this.findQuestionProposal(id);
+
+    if (proposal.questionId) {
+      await this.questionService.remove(proposal.questionId);
+    }
 
     return await this.findQuestionProposal(id);
   }

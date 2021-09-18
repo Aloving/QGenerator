@@ -1,7 +1,15 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 
-import { QuestionBaseData } from '../../questions/entities';
+import { Question } from '../../questions/entities';
+import { QuestionBaseData } from '../../questions/entities/question-data.entity';
 import { QuestionProposalStatusEnum } from '../enums';
 
 @Entity()
@@ -26,4 +34,17 @@ export class QuestionProposal extends QuestionBaseData {
     default: QuestionProposalStatusEnum.Active,
   })
   status: QuestionProposalStatusEnum;
+
+  @ApiProperty({
+    type: String,
+    description: 'Bound question id',
+  })
+  @Column({
+    nullable: true,
+  })
+  questionId?: Question['id'];
+
+  @OneToOne(() => Question, (question) => question.proposalId)
+  @JoinColumn({ name: 'questionId', referencedColumnName: 'id' })
+  question: Question;
 }
