@@ -36,7 +36,7 @@ export class User {
   @JoinTable()
   questions: Question[];
 
-  @OneToMany(() => QuestionProposal, (question) => question.author, {
+  @OneToMany(() => QuestionProposal, (proposal) => proposal.author, {
     cascade: true,
     eager: true,
   })

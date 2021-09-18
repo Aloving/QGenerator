@@ -11,6 +11,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Question } from '../../questions/entities';
 import { QuestionBaseData } from '../../questions/entities/question-data.entity';
 import { QuestionProposalStatusEnum } from '../enums';
+import { User } from '../../users';
 
 @Entity()
 export class QuestionProposal extends QuestionBaseData {
@@ -37,14 +38,32 @@ export class QuestionProposal extends QuestionBaseData {
 
   @ApiProperty({
     type: String,
+    description: 'Bound author id',
+  })
+  @Column()
+  authorId: string;
+
+  @ManyToOne(() => User, (user) => user.questionProposals)
+  @JoinColumn({ name: 'authorId', referencedColumnName: 'id' })
+  author: User;
+
+  @ApiProperty({
+    type: String,
     description: 'Bound question id',
+    nullable: true,
   })
   @Column({
     nullable: true,
   })
   questionId?: Question['id'];
 
-  @OneToOne(() => Question, (question) => question.proposalId)
+  @OneToOne(() => Question, (question) => question.proposalId, {
+    cascade: true,
+    nullable: true,
+    onDelete: 'SET NULL',
+    orphanedRowAction: 'nullify',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({ name: 'questionId', referencedColumnName: 'id' })
   question: Question;
 }

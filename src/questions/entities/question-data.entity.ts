@@ -24,17 +24,6 @@ export class QuestionBaseData {
     length: 150,
   })
   text: string;
-
-  @ApiProperty({
-    type: String,
-    description: 'Bound author id',
-  })
-  @Column()
-  authorId: string;
-
-  @ManyToOne(() => User, (user) => user.questions)
-  @JoinColumn({ name: 'authorId', referencedColumnName: 'id' })
-  author: User;
 }
 
 @Entity()
@@ -70,4 +59,15 @@ export class QuestionData extends QuestionBaseData implements IQuestionData {
   })
   @JoinTable()
   answers: Answer[];
+
+  @ApiProperty({
+    type: String,
+    description: 'Bound author id',
+  })
+  @Column()
+  authorId: string;
+
+  @ManyToOne(() => User, (user) => user.questions)
+  @JoinColumn({ name: 'authorId', referencedColumnName: 'id' })
+  author: User;
 }

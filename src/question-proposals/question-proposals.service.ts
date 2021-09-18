@@ -22,20 +22,26 @@ export class QuestionProposalsService implements IQuestionProposalsService {
   ) {}
 
   async acceptQuestionProposal(id: QuestionProposal['id']) {
-    const proposal = await this.findQuestionProposal(id);
-    const newQuestion = await this.questionService.create({
-      text: proposal.text,
-      authorId: proposal.authorId,
-      proposalId: proposal.id,
-      likes: '0',
-      dislikes: '0',
-      answers: [],
-    });
+    try {
+      const proposal = await this.findQuestionProposal(id);
+      const newQuestion = await this.questionService.create({
+        text: proposal.text,
+        authorId: proposal.authorId,
+        proposalId: proposal.id,
+        likes: '0',
+        dislikes: '0',
+        answers: [],
+      });
 
-    await this.questionProposalRepository.update(id, {
-      questionId: newQuestion.id,
-      status: QuestionProposalStatusEnum.Accepted,
-    });
+      await this.questionProposalRepository.update(id, {
+        questionId: newQuestion.id,
+        status: QuestionProposalStatusEnum.Accepted,
+      });
+    } catch (e) {
+      if (e.code !== 'ER_DUP_ENTRY') {
+        throw e;
+      }
+    }
 
     return await this.findQuestionProposal(id);
   }

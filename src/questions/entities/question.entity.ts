@@ -28,7 +28,13 @@ export class Question extends QuestionData {
   })
   proposalId?: QuestionProposal['id'];
 
-  @OneToOne(() => QuestionProposal, (proposal) => proposal.questionId)
+  @OneToOne(() => QuestionProposal, (proposal) => proposal.questionId, {
+    cascade: true,
+    nullable: true,
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+    orphanedRowAction: 'nullify',
+  })
   @JoinColumn({ name: 'proposalId', referencedColumnName: 'id' })
   proposal: QuestionProposal;
 }
