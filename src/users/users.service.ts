@@ -10,6 +10,7 @@ import { Repository } from 'typeorm';
 import { ProviderEnum, RepositoryEnum } from '../enums';
 import {
   AddRefreshTokenDto,
+  ChangeUserRoleDto,
   CreateUserDto,
   FindUserByIdDto,
   FindUserByLoginDto,
@@ -48,11 +49,17 @@ export class UsersService implements IUserService, OnApplicationBootstrap {
     }
   }
 
+  async changeUserRole({ userId, role }: ChangeUserRoleDto): Promise<User> {
+    await this.userRepository.update(userId, { role });
+
+    return this.findUserById({ id: userId });
+  }
+
   async createUser({
     password,
     role,
     ...createUserDto
-  }: CreateUserDto & { role: Role }): Promise<any> {
+  }: CreateUserDto & { role: Role }) {
     const cryptedPassword = await this.cryptService.hashPassword(password);
 
     try {

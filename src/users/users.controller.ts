@@ -5,15 +5,16 @@ import {
   Get,
   Param,
   Post,
+  Put,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 
-import { CreateUserDto } from './dto';
+import { ChangeUserRoleDto, CreateUserDto } from './dto';
 import { UsersService } from './users.service';
 import { User } from './entities';
-import { AuthGuard } from '@nestjs/passport';
 import { Roles } from './decorators';
 import { Role } from './enums';
 import { RolesGuard } from './guards';
@@ -34,6 +35,21 @@ export class UsersController {
     return this.usersService.create(createUser);
   }
 
+  @Put('/changeRole')
+  @ApiResponse({
+    status: 200,
+    type: User,
+    description: 'Point to change user role',
+  })
+  @UseInterceptors(ClassSerializerInterceptor)
+  @ApiBearerAuth('access-token')
+  @UseGuards(AuthGuard('jwt'))
+  @Roles(Role.SuperAdmin, Role.Admin)
+  @UseGuards(RolesGuard)
+  async changeUserRole(@Body() changeRolePayload: ChangeUserRoleDto) {
+    return this.usersService.changeUserRole(changeRolePayload);
+  }
+
   @Get()
   @ApiResponse({
     status: 200,
@@ -44,7 +60,7 @@ export class UsersController {
   @UseInterceptors(ClassSerializerInterceptor)
   @ApiBearerAuth('access-token')
   @UseGuards(AuthGuard('jwt'))
-  @Roles(Role.Admin, Role.Moderator)
+  @Roles(Role.SuperAdmin, Role.Admin)
   @UseGuards(RolesGuard)
   async findAll() {
     return this.usersService.findAllUsers();

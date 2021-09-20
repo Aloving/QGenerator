@@ -35,7 +35,7 @@ export class QuestionsController {
   })
   @ApiBearerAuth('access-token')
   @UseGuards(AuthGuard('jwt'))
-  @Roles(Role.Admin, Role.Moderator)
+  @Roles(Role.SuperAdmin, Role.Admin, Role.Moderator)
   @UseGuards(RolesGuard)
   create(@Body() createQuestionDto: CreateQuestionDto) {
     return this.questionsService.create(createQuestionDto);
@@ -70,7 +70,7 @@ export class QuestionsController {
   })
   @ApiBearerAuth('access-token')
   @UseGuards(AuthGuard('jwt'))
-  @Roles(Role.Admin, Role.Moderator)
+  @Roles(Role.SuperAdmin, Role.Admin, Role.Moderator)
   @UseGuards(RolesGuard)
   findAll() {
     return this.questionsService.findAll();
@@ -83,7 +83,7 @@ export class QuestionsController {
     description: 'Point to update an existing question',
   })
   @UseGuards(AuthGuard('jwt'))
-  @Roles(Role.Admin, Role.Moderator)
+  @Roles(Role.SuperAdmin, Role.Admin, Role.Moderator)
   @UseGuards(RolesGuard)
   update(
     @Param('id') id: string,
@@ -101,7 +101,7 @@ export class QuestionsController {
   })
   @ApiBearerAuth('access-token')
   @UseGuards(AuthGuard('jwt'))
-  @Roles(Role.Admin, Role.Moderator)
+  @Roles(Role.SuperAdmin, Role.Admin, Role.Moderator)
   @UseGuards(RolesGuard)
   remove(@Param('id') id: string) {
     return this.questionsService.remove(+id);

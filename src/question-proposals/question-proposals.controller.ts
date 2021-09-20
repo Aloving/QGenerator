@@ -32,7 +32,7 @@ export class QuestionProposalsController {
   })
   @ApiBearerAuth('access-token')
   @UseGuards(AuthGuard('jwt'))
-  @Roles(Role.Admin, Role.Moderator)
+  @Roles(Role.SuperAdmin, Role.Admin, Role.Moderator)
   @UseGuards(RolesGuard)
   getAllProposals() {
     return this.proposalsService.findAllQuestionProposals();
@@ -62,7 +62,7 @@ export class QuestionProposalsController {
   })
   @ApiBearerAuth('access-token')
   @UseGuards(AuthGuard('jwt'))
-  @Roles(Role.Admin, Role.Moderator)
+  @Roles(Role.SuperAdmin, Role.Admin, Role.Moderator)
   @UseGuards(RolesGuard)
   acceptProposal(@Param('id') id: QuestionProposal['id']) {
     return this.proposalsService.acceptQuestionProposal(id);
@@ -79,7 +79,7 @@ export class QuestionProposalsController {
   })
   @ApiBearerAuth('access-token')
   @UseGuards(AuthGuard('jwt'))
-  @Roles(Role.Admin, Role.Moderator)
+  @Roles(Role.SuperAdmin, Role.Admin, Role.Moderator)
   @UseGuards(RolesGuard)
   declineProposal(@Param('id') id: QuestionProposal['id']) {
     return this.proposalsService.declineQuestionProposal(id);

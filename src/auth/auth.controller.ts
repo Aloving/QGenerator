@@ -17,8 +17,6 @@ import { LoginDto } from './dto/login.dto';
 import { AuthService } from './auth.service';
 import { TokenRefreshDto } from './dto/token-refresh.dto';
 import { RolesGuard } from '../users';
-import { Roles } from '../users/decorators';
-import { Role } from '../users/enums';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -39,7 +37,6 @@ export class AuthController {
   @Get('/userByToken')
   @ApiBearerAuth('access-token')
   @UseGuards(AuthGuard())
-  @Roles(Role.User, Role.Admin, Role.Moderator)
   @UseGuards(RolesGuard)
   @UseInterceptors(ClassSerializerInterceptor)
   async getUser(@Req() request: Request) {

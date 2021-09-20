@@ -6,15 +6,17 @@ import {
   AddRefreshTokenDto,
   CreateUserDto,
   FindUsersById,
+  ChangeUserRoleDto,
 } from '../dto';
 
 export interface IUserService {
-  create(payload: CreateUserDto): Promise<User>;
-  findUserByLogin(payload: FindUserByLoginDto): Promise<User>;
-  findAllUsers(): Promise<User[]>;
-  findUserByRefreshToken(payload: FindUserByRefreshTokenDto): Promise<User>;
-  findUserById(payload: FindUserByIdDto): Promise<User>;
-  findByIds(payload: FindUsersById): Promise<User[]>;
   addRefreshToken(payload: AddRefreshTokenDto): Promise<void>;
+  changeUserRole(payload: ChangeUserRoleDto): Promise<User>;
+  create(payload: CreateUserDto): Promise<User>;
   deleteRefreshToken(userId: User['id']): Promise<void>;
+  findAllUsers(): Promise<User[]>;
+  findByIds(payload: FindUsersById): Promise<User[]>;
+  findUserById(payload: FindUserByIdDto): Promise<User>;
+  findUserByLogin(payload: FindUserByLoginDto): Promise<User>;
+  findUserByRefreshToken(payload: FindUserByRefreshTokenDto): Promise<User>;
 }
