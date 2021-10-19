@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   JoinColumn,
+  CreateDateColumn,
 } from 'typeorm';
 
 import { User } from '../../users';
@@ -49,6 +50,13 @@ export class AnswerData {
   })
   @Column()
   authorId: string;
+
+  @ApiProperty({
+    type: Date,
+    description: 'Created date',
+  })
+  @CreateDateColumn()
+  created: string;
 
   @ManyToOne(() => User, (user) => user.answers)
   @JoinColumn({ name: 'authorId', referencedColumnName: 'id' })

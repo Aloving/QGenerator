@@ -1,10 +1,10 @@
 import { Repository } from 'typeorm';
 
-import { UpdateQuestionDto, CreateQuestionDto } from './dto';
-import { ICrudQuestionService } from './interfaces';
-import { Question } from './entities';
+import { UpdateQuestionDto, CreateQuestionDto } from '../dto';
+import { ICrudQuestionsService } from '../interfaces';
+import { Question } from '../entities';
 
-export class QuestionsCrudService implements ICrudQuestionService {
+export class QuestionsCrudService implements ICrudQuestionsService {
   constructor(public readonly questionRepository: Repository<Question>) {}
 
   async create(createQuestionDto: CreateQuestionDto) {

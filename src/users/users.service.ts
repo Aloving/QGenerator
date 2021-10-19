@@ -96,7 +96,7 @@ export class UsersService implements IUserService, OnApplicationBootstrap {
       createUserDto.login !== this.env.DEFAULT_USER_LOGIN
     ) {
       const user = await this.createUser({
-        role: Role.Admin,
+        role: Role.SuperAdmin,
         ...createUserDto,
       });
       return this.userRepository.save(user);

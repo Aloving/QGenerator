@@ -1,7 +1,7 @@
 import { Question } from '../entities';
-import { ICrudQuestionService } from './ICrudQuestionService';
+import { ICrudQuestionsService } from './crud-questions-service';
 
-export interface IQuestionService extends ICrudQuestionService {
+export interface IQuestionService extends ICrudQuestionsService {
   randomize(
     excludeIds: Question['id'][],
   ): Promise<{

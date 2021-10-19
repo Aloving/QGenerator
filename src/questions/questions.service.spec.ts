@@ -1,6 +1,6 @@
 import { Repository } from 'typeorm';
 
-import { QuestionsService } from './questions.service';
+import { QuestionsService } from './services/questions.service';
 import { compileTestQuestionModule } from './helpers/testHelpers';
 import { Question } from './entities';
 import { CreateQuestionDto, UpdateQuestionDto } from './dto';

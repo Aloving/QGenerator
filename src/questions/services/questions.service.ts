@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 
-import { RepositoryEnum } from '../enums';
-import { QuestionsCrudService } from './questionsCrud.service';
-import { IQuestionService } from './interfaces';
-import { Question } from './entities';
+import { RepositoryEnum } from '../../enums';
+import { QuestionsCrudService } from './questions-crud.service';
+import { IQuestionService } from '../interfaces';
+import { Question } from '../entities';
 
 @Injectable()
 export class QuestionsService

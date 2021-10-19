@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  Column,
+  Column, CreateDateColumn,
   Entity,
   JoinColumn,
   JoinTable,
@@ -39,6 +39,13 @@ export class QuestionData extends QuestionBaseData implements IQuestionData {
   likes: string;
 
   @ApiProperty({
+    type: Date,
+    description: 'Created date',
+  })
+  @CreateDateColumn()
+  created: string;
+
+  @ApiProperty({
     description: 'Dislikes count',
     default: '0',
     type: String,
@@ -57,7 +64,6 @@ export class QuestionData extends QuestionBaseData implements IQuestionData {
     cascade: true,
     eager: true,
   })
-  @JoinTable()
   answers: Answer[];
 
   @ApiProperty({

@@ -2,7 +2,7 @@ import { Test } from '@nestjs/testing';
 import { Repository } from 'typeorm';
 
 import { QuestionsController } from '../questions.controller';
-import { QuestionsService } from '../questions.service';
+import { QuestionsService } from '../services/questions.service';
 import { RepositoryEnum } from '../../enums';
 import { Question } from '../entities';
 

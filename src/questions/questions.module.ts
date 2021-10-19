@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 
 import { DatabaseModule } from '../database';
-import { QuestionsService } from './questions.service';
+import { QuestionsService } from './services/questions.service';
 import { QuestionsController } from './questions.controller';
 import { questionsProviders } from './questions.providers';
 import { UsersModule } from '../users';
