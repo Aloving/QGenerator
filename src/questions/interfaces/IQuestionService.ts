@@ -1,18 +1,13 @@
 import { Question } from '../entities';
-import { CreateQuestionDto, UpdateQuestionDto } from '../dto';
+import { ICrudQuestionsService } from './crud-questions-service';
 
-export interface IQuestionService {
-  create(createDto: CreateQuestionDto): Promise<Question>;
-  findAll(): Promise<Question[]>;
-  update(id: Question['id'], data: UpdateQuestionDto): Promise<Question>;
-  remove(id: Question['id']): Promise<boolean>;
+export interface IQuestionService extends ICrudQuestionsService {
   randomize(
     excludeIds: Question['id'][],
   ): Promise<{
     excludeIds: Question['id'][];
     question: Question;
   }>;
-  findOne(id: Question['id']): Promise<Question>;
   increaseLikes(id: Question['id']): Promise<Question>;
   decreaseLikes(id: Question['id']): Promise<Question>;
   increaseDislikes(id: Question['id']): Promise<Question>;

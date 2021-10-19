@@ -1,5 +1,5 @@
 import { QuestionsController } from './questions.controller';
-import { QuestionsService } from './questions.service';
+import { QuestionsService } from './services/questions.service';
 import { compileTestQuestionModule } from './helpers/testHelpers';
 import { CreateQuestionDto, UpdateQuestionDto } from './dto';
 

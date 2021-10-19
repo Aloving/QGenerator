@@ -1,8 +1,8 @@
-import { Body, Controller, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Param, Post, Put } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { CreateAnswerDto, UpdateAnswerDto } from './dto';
-import { AnswersService } from './answers.service';
+import { AnswersService } from './services/answers.service';
 import { Answer } from './entities';
 
 @ApiTags('answers')
@@ -18,6 +18,16 @@ export class AnswersController {
   })
   addAnswer(@Body() createAnswerDto: CreateAnswerDto) {
     return this.answersService.create(createAnswerDto);
+  }
+
+  @Delete('/:id/delete')
+  @ApiResponse({
+    status: 200,
+    type: Answer,
+    description: 'A point to add answer',
+  })
+  deleteAnswer(@Param('id') id: string) {
+    return this.answersService.remove(id);
   }
 
   @Put('/:id/edit')

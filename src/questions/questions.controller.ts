@@ -1,23 +1,28 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Put,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 
-import { QuestionsService } from './questions.service';
+import { QuestionsService } from './services/questions.service';
 import {
-  UpdateQuestionDto,
   CreateQuestionDto,
   GetRandomQuestionDto,
   GetRandomQuestionResponseDto,
-  GetQuestionDto,
+  UpdateQuestionDto,
 } from './dto';
 import { Question } from './entities';
+import { Roles } from '../users/decorators';
+import { Role, RolesGuard } from '../users';
+import { Answer } from '../answers/entities';
+import { CreateAnswerDto } from '../answers/dto';
 
 @ApiTags('questions')
 @Controller('questions')
@@ -30,6 +35,10 @@ export class QuestionsController {
     type: Question,
     description: 'A point to create question',
   })
+  @ApiBearerAuth('access-token')
+  @UseGuards(AuthGuard('jwt'))
+  @Roles(Role.SuperAdmin, Role.Admin, Role.Moderator)
+  @UseGuards(RolesGuard)
   create(@Body() createQuestionDto: CreateQuestionDto) {
     return this.questionsService.create(createQuestionDto);
   }
@@ -43,6 +52,16 @@ export class QuestionsController {
   randomizeQuestion(@Body() { excludeIds }: GetRandomQuestionDto) {
     return this.questionsService.randomize(excludeIds);
   }
+
+  // @Get('/:id/answers')
+  // @ApiResponse({
+  //   status: 200,
+  //   type: Answer,
+  //   description: 'A point to add answer',
+  // })
+  // findById(@Body() createAnswerDto: CreateAnswerDto) {
+  //   return this.answersService.create(createAnswerDto);
+  // }
 
   @Get(':id')
   @ApiResponse({
@@ -61,6 +80,10 @@ export class QuestionsController {
     isArray: true,
     description: 'Point to get all questions',
   })
+  @ApiBearerAuth('access-token')
+  @UseGuards(AuthGuard('jwt'))
+  @Roles(Role.SuperAdmin, Role.Admin, Role.Moderator)
+  @UseGuards(RolesGuard)
   findAll() {
     return this.questionsService.findAll();
   }
@@ -71,6 +94,9 @@ export class QuestionsController {
     type: Question,
     description: 'Point to update an existing question',
   })
+  @UseGuards(AuthGuard('jwt'))
+  @Roles(Role.SuperAdmin, Role.Admin, Role.Moderator)
+  @UseGuards(RolesGuard)
   update(
     @Param('id') id: string,
     @Body() updateQuestionDto: UpdateQuestionDto,
@@ -79,16 +105,22 @@ export class QuestionsController {
   }
 
   @Delete('/:id')
+  @ApiParam({ name: 'id' })
   @ApiResponse({
     status: 200,
     type: Boolean,
     description: 'A point to delete question out of the app',
   })
+  @ApiBearerAuth('access-token')
+  @UseGuards(AuthGuard('jwt'))
+  @Roles(Role.SuperAdmin, Role.Admin, Role.Moderator)
+  @UseGuards(RolesGuard)
   remove(@Param('id') id: string) {
     return this.questionsService.remove(+id);
   }
 
   @Put('/:id/increaseLikes')
+  @ApiParam({ name: 'id' })
   @ApiResponse({
     status: 200,
     type: Question,
@@ -99,6 +131,7 @@ export class QuestionsController {
   }
 
   @Put('/:id/decreaseLikes')
+  @ApiParam({ name: 'id' })
   @ApiResponse({
     status: 200,
     type: Question,
@@ -109,6 +142,7 @@ export class QuestionsController {
   }
 
   @Put('/:id/increaseDislikes')
+  @ApiParam({ name: 'id' })
   @ApiResponse({
     status: 200,
     type: Question,
@@ -119,6 +153,7 @@ export class QuestionsController {
   }
 
   @Put('/:id/decreaseDislikes')
+  @ApiParam({ name: 'id' })
   @ApiResponse({
     status: 200,
     type: Question,

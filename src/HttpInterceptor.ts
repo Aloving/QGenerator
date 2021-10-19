@@ -16,8 +16,6 @@ export class HttpInterceptor implements NestInterceptor {
     context: ExecutionContext,
     next: CallHandler<any>,
   ): Observable<any> | Promise<Observable<any>> {
-    console.log(context);
-
     return next.handle().pipe(
       map((data) => {
         this.logger.debug(data);

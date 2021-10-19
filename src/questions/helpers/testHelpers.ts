@@ -2,7 +2,7 @@ import { Test } from '@nestjs/testing';
 import { Repository } from 'typeorm';
 
 import { QuestionsController } from '../questions.controller';
-import { QuestionsService } from '../questions.service';
+import { QuestionsService } from '../services/questions.service';
 import { RepositoryEnum } from '../../enums';
 import { Question } from '../entities';
 
@@ -25,9 +25,8 @@ export const compileTestQuestionModule = async () => {
       QuestionsService,
     ],
   }).compile();
-  const questionController = moduleRef.get<QuestionsController>(
-    QuestionsController,
-  );
+  const questionController =
+    moduleRef.get<QuestionsController>(QuestionsController);
   const questionService = moduleRef.get<QuestionsService>(QuestionsService);
   const questionRepository = moduleRef.get<Repository<Question>>(
     RepositoryEnum.QuestionRepository,

@@ -6,4 +6,7 @@ export const env: IEnv = {
   DB_HOST: '1213123123',
   DB_PASSWORD: 'root',
   DB_USERNAME: 'root',
+  DEFAULT_USER_PASSWORD: '123456',
+  DEFAULT_USER_EMAIL: 'test@test.com',
+  DEFAULT_USER_LOGIN: 'Admin',
 };

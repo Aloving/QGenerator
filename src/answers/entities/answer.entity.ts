@@ -6,20 +6,15 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   JoinColumn,
+  CreateDateColumn,
 } from 'typeorm';
 
-import { Question } from '../../questions';
 import { User } from '../../users';
+import { Question } from '../../questions/entities';
+import { IAnswer } from '../interfaces';
 
 @Entity()
-export class Answer {
-  @ApiProperty({
-    type: String,
-    description: 'Unique ID',
-  })
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
+export class AnswerData {
   @ApiProperty({
     description: 'Text of an answer',
     minLength: 1,
@@ -56,6 +51,13 @@ export class Answer {
   @Column()
   authorId: string;
 
+  @ApiProperty({
+    type: Date,
+    description: 'Created date',
+  })
+  @CreateDateColumn()
+  created: string;
+
   @ManyToOne(() => User, (user) => user.answers)
   @JoinColumn({ name: 'authorId', referencedColumnName: 'id' })
   author: User;
@@ -66,4 +68,14 @@ export class Answer {
   })
   @JoinColumn({ name: 'questionId', referencedColumnName: 'id' })
   question: Question;
+}
+
+@Entity()
+export class Answer extends AnswerData implements IAnswer {
+  @ApiProperty({
+    type: String,
+    description: 'Unique ID',
+  })
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 }

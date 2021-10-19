@@ -10,7 +10,13 @@ async function bootstrap() {
 
   app.use(helmet());
 
-  const config = new DocumentBuilder().setTitle('qGenerator-backend').build();
+  const config = new DocumentBuilder()
+    .setTitle('qGenerator-backend')
+    .addBearerAuth(
+      { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
+      'access-token',
+    )
+    .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, document);
 

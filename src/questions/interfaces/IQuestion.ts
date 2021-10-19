@@ -1,9 +1,12 @@
 import { IAnswer } from '../../answers';
 
-export interface IQuestion {
+export interface IQuestion extends IQuestionData {
   id: number;
+}
+
+export interface IQuestionData {
   text: string;
-  likes: number;
-  dislikes: number;
+  likes: string;
+  dislikes: string;
   answers: IAnswer[];
 }

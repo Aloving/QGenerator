@@ -2,9 +2,10 @@ import { Length, IsNotEmpty, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 import { Answer } from '../../answers';
-import { User } from '../../users/entities';
+import { User } from '../../users';
+import { QuestionProposal } from '../../question-proposals';
 
-export class CreateQuestionDto {
+export class CreateQuestionBaseDataDto {
   @ApiProperty({
     description: 'Text of a question',
     maxLength: 150,
@@ -24,20 +25,22 @@ export class CreateQuestionDto {
   @IsNotEmpty()
   @IsString()
   readonly authorId: User['id'];
+}
 
+export class CreateQuestionDto extends CreateQuestionBaseDataDto {
   @ApiProperty({
     description: 'Start number of likes',
-    type: Number,
-    default: 0,
+    type: String,
+    default: '0',
   })
-  readonly likes: number;
+  readonly likes: string;
 
   @ApiProperty({
     description: 'Start number of dislikes',
-    type: Number,
-    default: 0,
+    type: String,
+    default: '0',
   })
-  readonly dislikes: number;
+  readonly dislikes: string;
 
   @ApiProperty({
     description: 'Ready questions',
@@ -45,4 +48,10 @@ export class CreateQuestionDto {
     isArray: true,
   })
   readonly answers: Answer[];
+
+  @ApiProperty({
+    description: 'Bound proposal ID',
+    type: String,
+  })
+  readonly proposalId?: QuestionProposal['id'];
 }

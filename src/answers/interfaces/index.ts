@@ -1,3 +1,3 @@
-export * from './IAnswer';
-export * from './IAuthor';
-export * from './IAnswerService';
+export * from './answer.interface';
+export * from './answers-service.interface';
+export * from './crud-answers-service.interface';

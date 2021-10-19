@@ -4,11 +4,14 @@ import { DatabaseModule } from '../database';
 import { usersProviders } from './users.providers';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
+import { CryptModule } from '../crypt';
+import { RolesGuard } from './guards';
+import { EnvModule } from '../env';
 
 @Module({
-  imports: [forwardRef(() => DatabaseModule)],
-  exports: [UsersService],
-  providers: [UsersService, ...usersProviders],
+  imports: [EnvModule, CryptModule, forwardRef(() => DatabaseModule)],
+  exports: [UsersService, RolesGuard],
+  providers: [UsersService, RolesGuard, ...usersProviders],
   controllers: [UsersController],
 })
 export class UsersModule {}
