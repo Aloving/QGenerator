@@ -106,10 +106,6 @@ export class QuestionsController {
     type: Question,
     description: 'Endpoint to get certain question by id',
   })
-  @ApiBearerAuth('access-token')
-  @UseGuards(AuthGuard('jwt'))
-  @Roles(Role.Admin, Role.Moderator)
-  @UseGuards(RolesGuard)
   getQuestion(@Param('id') id: string) {
     return this.questionsService.findOne(+id);
   }

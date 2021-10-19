@@ -8,7 +8,7 @@ import {
   UseInterceptors,
   ClassSerializerInterceptor,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { ExtractJwt } from 'passport-jwt';
 import { Request } from 'express';
@@ -16,7 +16,7 @@ import { Request } from 'express';
 import { LoginDto } from './dto/login.dto';
 import { AuthService } from './auth.service';
 import { TokenRefreshDto } from './dto/token-refresh.dto';
-import { RolesGuard } from '../users/guards';
+import { RolesGuard } from '../users';
 import { Roles } from '../users/decorators';
 import { Role } from '../users/enums';
 
@@ -26,6 +26,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('/login')
+  @UseInterceptors(ClassSerializerInterceptor)
   async loginHandler(@Body() loginPayload: LoginDto) {
     return this.authService.login(loginPayload);
   }
@@ -38,7 +39,7 @@ export class AuthController {
   @Get('/userByToken')
   @ApiBearerAuth('access-token')
   @UseGuards(AuthGuard())
-  @Roles(Role.User)
+  @Roles(Role.User, Role.Admin, Role.Moderator)
   @UseGuards(RolesGuard)
   @UseInterceptors(ClassSerializerInterceptor)
   async getUser(@Req() request: Request) {
