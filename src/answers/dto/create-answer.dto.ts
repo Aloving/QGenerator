@@ -9,6 +9,7 @@ export class CreateAnswerDto {
     maxLength: 350,
     minLength: 1,
     type: String,
+    required: true,
   })
   @IsNotEmpty()
   @Length(1, 350)
@@ -17,6 +18,7 @@ export class CreateAnswerDto {
   @ApiProperty({
     description: 'Question id that answer should be bound to',
     type: String,
+    required: true,
   })
   @IsNotEmpty()
   @IsString()
@@ -25,6 +27,7 @@ export class CreateAnswerDto {
   @ApiProperty({
     description: 'Start count of like',
     type: Number,
+    nullable: true,
   })
   @IsNumber()
   likes: number;
@@ -32,6 +35,7 @@ export class CreateAnswerDto {
   @ApiProperty({
     description: 'Start count of dislike',
     type: Number,
+    nullable: true,
   })
   @IsNumber()
   dislikes: number;
@@ -39,8 +43,8 @@ export class CreateAnswerDto {
   @ApiProperty({
     description: 'Author id that answer should be bound to',
     type: Number,
+    nullable: true,
   })
-  @IsNotEmpty()
   @IsString()
   authorId: User['id'];
 }

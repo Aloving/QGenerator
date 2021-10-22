@@ -30,17 +30,17 @@ export class CreateQuestionBaseDataDto {
 export class CreateQuestionDto extends CreateQuestionBaseDataDto {
   @ApiProperty({
     description: 'Start number of likes',
-    type: String,
-    default: '0',
+    type: Number,
+    default: 0,
   })
-  readonly likes: string;
+  readonly likes: number;
 
   @ApiProperty({
     description: 'Start number of dislikes',
-    type: String,
-    default: '0',
+    type: Number,
+    default: 0,
   })
-  readonly dislikes: string;
+  readonly dislikes: number;
 
   @ApiProperty({
     description: 'Ready questions',

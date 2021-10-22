@@ -6,7 +6,7 @@ export interface IQuestion extends IQuestionData {
 
 export interface IQuestionData {
   text: string;
-  likes: string;
-  dislikes: string;
+  likes: number;
+  dislikes: number;
   answers: IAnswer[];
 }

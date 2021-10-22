@@ -40,7 +40,7 @@ export class QuestionsService
 
     return this.update(id, {
       ...questionToUpdate,
-      likes: String(+questionToUpdate.likes - 1),
+      likes: questionToUpdate.likes - 1,
     });
   }
 
@@ -58,7 +58,7 @@ export class QuestionsService
 
     return this.update(id, {
       ...questionToUpdate,
-      dislikes: String(+questionToUpdate.dislikes - 1),
+      dislikes: +questionToUpdate.dislikes - 1,
     });
   }
 }

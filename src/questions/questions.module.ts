@@ -1,14 +1,15 @@
 import { Module } from '@nestjs/common';
 
 import { DatabaseModule } from '../database';
-import { QuestionsService } from './services/questions.service';
+import { QuestionsService } from './services';
 import { QuestionsController } from './questions.controller';
 import { questionsProviders } from './questions.providers';
 import { UsersModule } from '../users';
 import { CryptModule } from '../crypt';
+import { EnvModule } from '../env';
 
 @Module({
-  imports: [DatabaseModule, UsersModule, CryptModule],
+  imports: [EnvModule, DatabaseModule, UsersModule, CryptModule],
   controllers: [QuestionsController],
   providers: [...questionsProviders, QuestionsService],
   exports: [QuestionsService],

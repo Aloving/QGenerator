@@ -1,25 +1,27 @@
 import {
   ForbiddenException,
   GoneException,
+  Inject,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 
 import { User } from '../users';
-import { UsersService } from '../users';
 import { CryptService } from '../crypt/';
+import { ServiceEnum } from '../enums';
 
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { AuthService as IAuthService } from './interfaces/auth-service.interface';
 import { LoginDto } from './dto/login.dto';
 import { TokenRefreshDto } from './dto/token-refresh.dto';
 import { TokensPair } from '../interfaces';
+import { IUsersService } from '../users/interfaces';
 
 @Injectable()
 export class AuthService implements IAuthService {
   constructor(
-    private readonly userService: UsersService,
+    @Inject(ServiceEnum.USERS_SERVICE)
+    private readonly userService: IUsersService,
     private readonly cryptService: CryptService,
   ) {}
 

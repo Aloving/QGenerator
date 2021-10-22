@@ -4,6 +4,7 @@ import {
   JoinTable,
   OneToMany,
   PrimaryGeneratedColumn,
+  Unique,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { IsEmail, IsNotEmpty, Length } from 'class-validator';
@@ -70,7 +71,7 @@ export class User {
   })
   public role: Role;
 
-  @Column()
+  @Column({ unique: true })
   @IsEmail({}, { message: 'Incorrect email' })
   public email: string;
 }

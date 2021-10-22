@@ -7,11 +7,16 @@ import { UsersController } from './users.controller';
 import { CryptModule } from '../crypt';
 import { RolesGuard } from './guards';
 import { EnvModule } from '../env';
+import { ServiceEnum } from '../enums';
 
 @Module({
   imports: [EnvModule, CryptModule, forwardRef(() => DatabaseModule)],
-  exports: [UsersService, RolesGuard],
-  providers: [UsersService, RolesGuard, ...usersProviders],
+  exports: [ServiceEnum.USERS_SERVICE, RolesGuard],
+  providers: [
+    { provide: ServiceEnum.USERS_SERVICE, useClass: UsersService },
+    RolesGuard,
+    ...usersProviders,
+  ],
   controllers: [UsersController],
 })
 export class UsersModule {}

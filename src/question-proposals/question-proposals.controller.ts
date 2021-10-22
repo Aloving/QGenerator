@@ -17,6 +17,7 @@ import { Role, RolesGuard } from '../users';
 import { QuestionProposalsService } from './question-proposals.service';
 import { QuestionProposal } from './entities';
 import { QuestionProposalWithUserDto } from './dto';
+import { DefaultUserInterceptor } from '../author/interceptors';
 
 @ApiTags('question-proposals')
 @Controller('proposals/questions')
@@ -45,6 +46,7 @@ export class QuestionProposalsController {
     description: 'point to propose a question',
   })
   @UseInterceptors(ClassSerializerInterceptor)
+  @UseInterceptors(DefaultUserInterceptor)
   proposeQuestion(
     @Body() createQuestionBaseDataDto: CreateQuestionBaseDataDto,
   ) {

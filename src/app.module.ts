@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -13,6 +13,8 @@ import { AuthModule } from './auth';
 import { CryptModule } from './crypt';
 import { RolesGuard } from './users/guards';
 import { QuestionProposalsModule } from './question-proposals';
+import { DefaultUserInterceptor } from './author/interceptors';
+// import { AuthorModule } from './author';
 
 @Module({
   imports: [
@@ -25,6 +27,7 @@ import { QuestionProposalsModule } from './question-proposals';
     EnvModule,
     AuthModule,
     CryptModule,
+    // AuthorModule,
   ],
   controllers: [AppController],
   providers: [
@@ -33,6 +36,10 @@ import { QuestionProposalsModule } from './question-proposals';
       provide: APP_GUARD,
       useClass: RolesGuard,
     },
+    // {
+    //   provide: APP_INTERCEPTOR,
+    //   useClass: DefaultUserInterceptor,
+    // },
   ],
 })
 export class AppModule {}

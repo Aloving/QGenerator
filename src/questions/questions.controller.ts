@@ -7,11 +7,12 @@ import {
   Post,
   Put,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 
-import { QuestionsService } from './services/questions.service';
+import { QuestionsService } from './services';
 import {
   CreateQuestionDto,
   GetRandomQuestionDto,
@@ -21,8 +22,7 @@ import {
 import { Question } from './entities';
 import { Roles } from '../users/decorators';
 import { Role, RolesGuard } from '../users';
-import { Answer } from '../answers/entities';
-import { CreateAnswerDto } from '../answers/dto';
+import { DefaultUserInterceptor } from '../author/interceptors';
 
 @ApiTags('questions')
 @Controller('questions')
@@ -39,6 +39,7 @@ export class QuestionsController {
   @UseGuards(AuthGuard('jwt'))
   @Roles(Role.SuperAdmin, Role.Admin, Role.Moderator)
   @UseGuards(RolesGuard)
+  @UseInterceptors(DefaultUserInterceptor)
   create(@Body() createQuestionDto: CreateQuestionDto) {
     return this.questionsService.create(createQuestionDto);
   }
@@ -52,16 +53,6 @@ export class QuestionsController {
   randomizeQuestion(@Body() { excludeIds }: GetRandomQuestionDto) {
     return this.questionsService.randomize(excludeIds);
   }
-
-  // @Get('/:id/answers')
-  // @ApiResponse({
-  //   status: 200,
-  //   type: Answer,
-  //   description: 'A point to add answer',
-  // })
-  // findById(@Body() createAnswerDto: CreateAnswerDto) {
-  //   return this.answersService.create(createAnswerDto);
-  // }
 
   @Get(':id')
   @ApiResponse({

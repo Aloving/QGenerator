@@ -9,7 +9,7 @@ import {
   ChangeUserRoleDto,
 } from '../dto';
 
-export interface IUserService {
+export interface IUsersService {
   addRefreshToken(payload: AddRefreshTokenDto): Promise<void>;
   changeUserRole(payload: ChangeUserRoleDto): Promise<User>;
   create(payload: CreateUserDto): Promise<User>;

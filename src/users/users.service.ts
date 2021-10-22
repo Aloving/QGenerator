@@ -18,13 +18,13 @@ import {
   FindUsersById,
 } from './dto';
 import { User } from './entities';
-import { IUserService } from './interfaces';
+import { IUsersService } from './interfaces';
 import { CryptService } from '../crypt';
 import { Role } from './enums';
 import { IEnv } from '../env';
 
 @Injectable()
-export class UsersService implements IUserService, OnApplicationBootstrap {
+export class UsersService implements IUsersService, OnApplicationBootstrap {
   private DEFAULT_USER_ROLE = Role.User;
 
   constructor(
@@ -36,7 +36,7 @@ export class UsersService implements IUserService, OnApplicationBootstrap {
 
   async onApplicationBootstrap() {
     // create default user
-    const user = await this.userRepository.find({
+    const user = await this.userRepository.findOne({
       login: this.env.DEFAULT_USER_LOGIN,
     });
 

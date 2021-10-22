@@ -1,9 +1,18 @@
-import { Body, Controller, Delete, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Param,
+  Post,
+  Put,
+  UseInterceptors,
+} from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { CreateAnswerDto, UpdateAnswerDto } from './dto';
 import { AnswersService } from './services/answers.service';
 import { Answer } from './entities';
+import { DefaultUserInterceptor } from '../author/interceptors';
 
 @ApiTags('answers')
 @Controller('answers')
@@ -16,6 +25,7 @@ export class AnswersController {
     type: Answer,
     description: 'A point to add answer',
   })
+  @UseInterceptors(DefaultUserInterceptor)
   addAnswer(@Body() createAnswerDto: CreateAnswerDto) {
     return this.answersService.create(createAnswerDto);
   }

@@ -3,6 +3,7 @@ import {
   ClassSerializerInterceptor,
   Controller,
   Get,
+  Inject,
   Param,
   Post,
   Put,
@@ -12,17 +13,22 @@ import {
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 
-import { ChangeUserRoleDto, CreateUserDto } from './dto';
-import { UsersService } from './users.service';
 import { User } from './entities';
-import { Roles } from './decorators';
-import { Role } from './enums';
 import { RolesGuard } from './guards';
+import { Role } from './enums';
+import { ServiceEnum } from '../enums';
+
+import { ChangeUserRoleDto, CreateUserDto } from './dto';
+import { Roles } from './decorators';
+import { IUsersService } from './interfaces';
 
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    @Inject(ServiceEnum.USERS_SERVICE)
+    private readonly usersService: IUsersService,
+  ) {}
 
   @Post('/create')
   @ApiResponse({

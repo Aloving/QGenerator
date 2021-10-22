@@ -1,6 +1,7 @@
 import {
   CanActivate,
   ExecutionContext,
+  Inject,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -12,13 +13,14 @@ import { ROLES_KEY } from '../../decorators';
 import { CryptService } from '../../../crypt';
 import { JwtPayload } from '../../../auth/interfaces/jwt-payload.interface';
 import { UsersService } from '../../users.service';
+import { ServiceEnum } from '../../../enums';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
     private cryptService: CryptService,
-    private usersService: UsersService,
+    @Inject(ServiceEnum.USERS_SERVICE) private usersService: UsersService,
   ) {}
 
   async canActivate(context: ExecutionContext) {

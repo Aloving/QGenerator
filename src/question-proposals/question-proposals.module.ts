@@ -7,9 +7,16 @@ import { QuestionProposalsService } from './question-proposals.service';
 import { questionProposalsProviders } from './question-proposals.providers';
 import { QuestionsModule } from '../questions';
 import { UsersModule } from '../users';
+import { EnvModule } from '../env';
 
 @Module({
-  imports: [DatabaseModule, CryptModule, QuestionsModule, UsersModule],
+  imports: [
+    EnvModule,
+    DatabaseModule,
+    CryptModule,
+    QuestionsModule,
+    UsersModule,
+  ],
   controllers: [QuestionProposalsController],
   providers: [...questionProposalsProviders, QuestionProposalsService],
 })

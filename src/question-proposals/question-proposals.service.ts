@@ -2,15 +2,16 @@ import { flatten, Inject, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { uniq } from 'lodash';
 
-import { RepositoryEnum } from '../enums';
+import { RepositoryEnum, ServiceEnum } from '../enums';
 import { QuestionProposal } from './entities';
 import { CreateQuestionBaseDataDto } from '../questions/dto';
 import { QuestionProposalWithUserDto } from './dto';
 
+import { User } from '../users';
+import { QuestionsService } from '../questions';
+import { IUsersService } from '../users/interfaces';
 import { IQuestionProposalsService } from './interfaces';
 import { QuestionProposalStatusEnum } from './enums';
-import { User, UsersService } from '../users';
-import { QuestionsService } from '../questions';
 
 @Injectable()
 export class QuestionProposalsService implements IQuestionProposalsService {
@@ -18,7 +19,7 @@ export class QuestionProposalsService implements IQuestionProposalsService {
     @Inject(RepositoryEnum.QuestionsProposalsRepository)
     private questionProposalRepository: Repository<QuestionProposal>,
     private questionService: QuestionsService,
-    private usersService: UsersService,
+    @Inject(ServiceEnum.USERS_SERVICE) private usersService: IUsersService,
   ) {}
 
   async acceptQuestionProposal(id: QuestionProposal['id']) {
@@ -28,8 +29,8 @@ export class QuestionProposalsService implements IQuestionProposalsService {
         text: proposal.text,
         authorId: proposal.authorId,
         proposalId: proposal.id,
-        likes: '0',
-        dislikes: '0',
+        likes: 0,
+        dislikes: 0,
         answers: [],
       });
 

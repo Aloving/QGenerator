@@ -30,13 +30,13 @@ export class QuestionBaseData {
 export class QuestionData extends QuestionBaseData implements IQuestionData {
   @ApiProperty({
     description: 'Likes count',
-    default: '0',
-    type: String,
+    default: 0,
+    type: Number,
   })
   @Column({
-    default: '0',
+    default: 0,
   })
-  likes: string;
+  likes: number;
 
   @ApiProperty({
     type: Date,
@@ -47,13 +47,13 @@ export class QuestionData extends QuestionBaseData implements IQuestionData {
 
   @ApiProperty({
     description: 'Dislikes count',
-    default: '0',
-    type: String,
+    default: 0,
+    type: Number,
   })
   @Column({
-    default: '0',
+    default: 0,
   })
-  dislikes: string;
+  dislikes: number;
 
   @ApiProperty({
     description: 'The answers',

@@ -26,6 +26,7 @@ export class AnswerData {
   @ApiProperty({
     description: 'Count of likes',
     type: Number,
+    default: 0,
   })
   @Column()
   likes: number;
@@ -33,6 +34,7 @@ export class AnswerData {
   @ApiProperty({
     description: 'Count of dislikes',
     type: Number,
+    default: 0,
   })
   @Column()
   dislikes: number;
@@ -52,6 +54,13 @@ export class AnswerData {
   authorId: string;
 
   @ApiProperty({
+    type: String,
+    description: 'Author name',
+  })
+  @Column()
+  authorName: string;
+
+  @ApiProperty({
     type: Date,
     description: 'Created date',
   })
@@ -59,7 +68,10 @@ export class AnswerData {
   created: string;
 
   @ManyToOne(() => User, (user) => user.answers)
-  @JoinColumn({ name: 'authorId', referencedColumnName: 'id' })
+  @JoinColumn([
+    { name: 'authorId', referencedColumnName: 'id' },
+    { name: 'authorName', referencedColumnName: 'login' },
+  ])
   author: User;
 
   @ManyToOne(() => Question, (question) => question.answers, {
