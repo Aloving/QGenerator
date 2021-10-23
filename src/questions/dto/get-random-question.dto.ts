@@ -12,6 +12,16 @@ export class GetRandomQuestionDto {
 }
 
 export class GetRandomQuestionResponseDto extends GetRandomQuestionDto {
-  @ApiProperty({})
+  @ApiProperty({
+    description: 'Question generated randomly',
+    type: Question,
+  })
   question: Question;
+
+  @ApiProperty({
+    type: String,
+    isArray: true,
+    description: 'Updated excluded ids',
+  })
+  excludeIds: Question['id'][];
 }

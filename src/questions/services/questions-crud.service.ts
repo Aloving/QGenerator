@@ -1,4 +1,5 @@
-import { Repository } from 'typeorm';
+import { Repository, Not, In } from 'typeorm';
+import { sample } from 'lodash';
 
 import { UpdateQuestionDto, CreateQuestionDto } from '../dto';
 import { ICrudQuestionsService } from '../interfaces';
@@ -13,12 +14,12 @@ export class QuestionsCrudService implements ICrudQuestionsService {
     return this.questionRepository.save(question);
   }
 
-  async randomizeOne() {
-    return await this.questionRepository
-      .createQueryBuilder('question')
-      .leftJoinAndSelect('question.answers', 'answer')
-      .orderBy('RAND()')
-      .getOne();
+  async randomizeOne(excludeIds: Question['id'][]) {
+    const answers = await this.questionRepository.find({
+      where: { id: Not(In(excludeIds)) },
+    });
+
+    return sample(answers);
   }
 
   async findAll() {

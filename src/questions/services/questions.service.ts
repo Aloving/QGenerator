@@ -5,6 +5,7 @@ import { RepositoryEnum } from '../../enums';
 import { QuestionsCrudService } from './questions-crud.service';
 import { IQuestionService } from '../interfaces';
 import { Question } from '../entities';
+import { GetRandomQuestionDto } from '../dto';
 
 @Injectable()
 export class QuestionsService
@@ -17,13 +18,22 @@ export class QuestionsService
     super(questionRepository);
   }
 
-  async randomize(excludeIds: number[]) {
-    const question = await this.randomizeOne();
+  async randomize({ excludeIds }: GetRandomQuestionDto) {
+    const question = await this.randomizeOne(excludeIds);
 
-    return Promise.resolve({
-      excludeIds,
-      question,
-    });
+    if (question) {
+      return {
+        excludeIds: this.getUpdatedExcludeIds(excludeIds, question.id),
+        question,
+      };
+    }
+
+    const firstQuestion = await this.randomizeOne([]);
+
+    return {
+      excludeIds: [firstQuestion.id],
+      question: firstQuestion,
+    };
   }
 
   async increaseLikes(id: number) {
@@ -60,5 +70,14 @@ export class QuestionsService
       ...questionToUpdate,
       dislikes: +questionToUpdate.dislikes - 1,
     });
+  }
+
+  private getUpdatedExcludeIds(
+    excludeIds: Question['id'][],
+    questionId: Question['id'],
+  ) {
+    return excludeIds.includes(questionId)
+      ? excludeIds
+      : [...excludeIds, questionId];
   }
 }

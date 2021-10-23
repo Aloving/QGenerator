@@ -51,7 +51,7 @@ export class QuestionsController {
     description: 'Path to get random question, it supports id excluding',
   })
   randomizeQuestion(@Body() { excludeIds }: GetRandomQuestionDto) {
-    return this.questionsService.randomize(excludeIds);
+    return this.questionsService.randomize({ excludeIds });
   }
 
   @Get(':id')
